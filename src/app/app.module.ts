@@ -6,9 +6,10 @@ import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { WelcomeComponent } from './modules/welcome/welcome.component';
 import { HomeComponent } from './modules/home/home.component';
+import { AboutComponent } from './modules/about/about.component';
 
 @NgModule({
-  declarations: [AppComponent, WelcomeComponent, HomeComponent],
+  declarations: [AppComponent, WelcomeComponent, HomeComponent, AboutComponent],
   imports: [
     CoreModule,
     SharedModule,
