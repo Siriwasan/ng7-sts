@@ -1,3 +1,101 @@
-<p>
-  sts29 works!
-</p>
+<h2>D. Risk Factors</h2>
+
+<form [formGroup]="formGroup" (submit)="submit()" #formDirective="ngForm">
+  <div fxLayout="column" fxLayout.gt-xs="row">
+    <mat-form-field class="item">
+      <input type="number" matInput placeholder="Height (cm)" formControlName="HeightCM" required>
+      <mat-hint>
+        <a>Please enter a valid input.</a>
+        <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+      </mat-hint>
+      <mat-error *ngFor="let validation of validationMessages.HeightCM">
+        <mat-error *ngIf="isInvalid('HeightCM', validation.type)">{{
+          validation.message
+        }}</mat-error>
+      </mat-error>
+    </mat-form-field>
+
+
+    <mat-form-field class="item">
+      <input type="number" matInput placeholder="Weight (kg)" formControlName="WeightKg" required>
+      <mat-hint>
+        <a>Please enter a valid input.</a>
+        <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+      </mat-hint>
+      <mat-error *ngFor="let validation of validationMessages.WeightKg">
+        <mat-error *ngIf="isInvalid('WeightKg', validation.type)">{{
+          validation.message
+        }}</mat-error>
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field class="item" style="width: 400px" fxLayout="column">
+    <mat-label>Family History of Premature Coronary Artery Disease</mat-label>
+    <mat-select formControlName="FHCAD" required>
+      <mat-option value="1">Yes</mat-option>
+      <mat-option value="2">No</mat-option>
+      <mat-option value="3">Unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="item">
+    <mat-label>Diabetes</mat-label>
+    <mat-select formControlName="Diabetes" required>
+      <mat-option value="1">Yes</mat-option>
+      <mat-option value="2">No</mat-option>
+      <mat-option value="3">Unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="item">
+    <mat-label>Dyslipidemia</mat-label>
+    <mat-select formControlName="Dyslip" required>
+      <mat-option value="1">Yes</mat-option>
+      <mat-option value="2">No</mat-option>
+      <mat-option value="3">Unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="item">
+    <mat-label>Dialysis</mat-label>
+    <mat-select formControlName="Dialysis" required>
+      <mat-option value="1">Yes</mat-option>
+      <mat-option value="2">No</mat-option>
+      <mat-option value="3">Unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="item">
+    <mat-label>Hypertension</mat-label>
+    <mat-select formControlName="Hypertn" required>
+      <mat-option value="1">Yes</mat-option>
+      <mat-option value="2">No</mat-option>
+      <mat-option value="3">Unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="item" style="width: 400px">
+    <mat-label>Tobacco use</mat-label>
+    <mat-select formControlName="TobaccoUse" required>
+      <mat-option value="1">Never smoker</mat-option>
+      <mat-option value="2">Current every day smoker</mat-option>
+      <mat-option value="3">Current some day smoker</mat-option>
+      <mat-option value="4">Smoker, current status (frequency) unknown</mat-option>
+      <mat-option value="5">Former smoker</mat-option>
+      <mat-option value="6">Smoking status unknown</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit">Submit</button>
+</form>
+<button mat-raised-button color="warn" (click)="clear()">Reset</button>
+<button mat-raised-button color="warn" (click)="formDirective.resetForm(formGroup.value)">Clear error</button>
+<button mat-raised-button color="accent" [disabled]="result === undefined" (click)="load()">
+  Load
+</button>
+
+<br />
+<br />
+
+<div class="label-text">Form value: {{ formGroup.value | json }}</div>
