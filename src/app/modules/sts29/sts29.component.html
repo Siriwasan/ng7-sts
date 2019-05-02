@@ -1,96 +1,179 @@
-<h2>D. Risk Factors</h2>
+<mat-button-toggle (click)="allExpandState = !allExpandState">{{
+  allExpandState ? 'Collapse All' : 'Expand All'
+}}</mat-button-toggle>
 
 <form [formGroup]="formGroup" (submit)="submit()" #formDirective="ngForm">
-  <div fxLayout="column" fxLayout.gt-xs="row">
-    <mat-form-field class="item">
-      <input type="number" matInput placeholder="Height (cm)" formControlName="HeightCM" required>
-      <mat-hint>
-        <a>Please enter a valid input.</a>
-        <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
-      </mat-hint>
-      <mat-error *ngFor="let validation of validationMessages.HeightCM">
-        <mat-error *ngIf="isInvalid('HeightCM', validation.type)">{{
-          validation.message
-        }}</mat-error>
-      </mat-error>
-    </mat-form-field>
+  <mat-accordion multi="true">
+    <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          A. Administrative
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
+      Test
+    </mat-expansion-panel>
 
-    <mat-form-field class="item">
-      <input type="number" matInput placeholder="Weight (kg)" formControlName="WeightKg" required>
-      <mat-hint>
-        <a>Please enter a valid input.</a>
-        <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
-      </mat-hint>
-      <mat-error *ngFor="let validation of validationMessages.WeightKg">
-        <mat-error *ngIf="isInvalid('WeightKg', validation.type)">{{
-          validation.message
-        }}</mat-error>
-      </mat-error>
-    </mat-form-field>
-  </div>
+    <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          D. Risk Factors
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-  <mat-form-field class="item" style="width: 400px" fxLayout="column">
-    <mat-label>Family History of Premature Coronary Artery Disease</mat-label>
-    <mat-select formControlName="FHCAD" required>
-      <mat-option value="1">Yes</mat-option>
-      <mat-option value="2">No</mat-option>
-      <mat-option value="3">Unknown</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <div fxLayout="column" fxLayout.gt-xs="row">
+        <mat-form-field class="item">
+          <input
+            type="number"
+            matInput
+            placeholder="Height (cm)"
+            formControlName="HeightCM"
+            required
+          />
+          <mat-hint>
+            <a>Please enter a valid input.</a>
+            <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+          </mat-hint>
+          <mat-error *ngFor="let validation of validationMessages.HeightCM">
+            <mat-error *ngIf="isInvalid('HeightCM', validation.type)">
+              <a>{{ validation.message }}</a>
+              <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
 
-  <mat-form-field class="item">
-    <mat-label>Diabetes</mat-label>
-    <mat-select formControlName="Diabetes" required>
-      <mat-option value="1">Yes</mat-option>
-      <mat-option value="2">No</mat-option>
-      <mat-option value="3">Unknown</mat-option>
-    </mat-select>
-  </mat-form-field>
+        <mat-form-field class="item">
+          <input
+            type="number"
+            matInput
+            placeholder="Weight (kg)"
+            formControlName="WeightKg"
+            required
+          />
+          <mat-hint>
+            <a>Please enter a valid input.</a>
+            <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+          </mat-hint>
+          <mat-error *ngFor="let validation of validationMessages.WeightKg">
+            <mat-error *ngIf="isInvalid('WeightKg', validation.type)">{{
+              validation.message
+            }}</mat-error>
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-  <mat-form-field class="item">
-    <mat-label>Dyslipidemia</mat-label>
-    <mat-select formControlName="Dyslip" required>
-      <mat-option value="1">Yes</mat-option>
-      <mat-option value="2">No</mat-option>
-      <mat-option value="3">Unknown</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field class="item" style="width: 400px" fxLayout="column">
+        <mat-label>Family History of Premature Coronary Artery Disease</mat-label>
+        <mat-select formControlName="FHCAD" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+          <mat-option value="3">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field class="item">
-    <mat-label>Dialysis</mat-label>
-    <mat-select formControlName="Dialysis" required>
-      <mat-option value="1">Yes</mat-option>
-      <mat-option value="2">No</mat-option>
-      <mat-option value="3">Unknown</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field class="item">
+        <mat-label>Diabetes</mat-label>
+        <mat-select formControlName="Diabetes" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+          <mat-option value="3">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field class="item">
-    <mat-label>Hypertension</mat-label>
-    <mat-select formControlName="Hypertn" required>
-      <mat-option value="1">Yes</mat-option>
-      <mat-option value="2">No</mat-option>
-      <mat-option value="3">Unknown</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field class="item" *ngIf="isShowControl('DiabCtrl')">
+        <mat-label>Diabetes-Control</mat-label>
+        <mat-select formControlName="DiabCtrl" required>
+          <mat-option value="1">None</mat-option>
+          <mat-option value="2">Diet only</mat-option>
+          <mat-option value="3">Oral</mat-option>
+          <mat-option value="4">Insulin</mat-option>
+          <mat-option value="5">Other SubQ</mat-option>
+          <mat-option value="6">Other</mat-option>
+          <mat-option value="7">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <mat-form-field class="item" style="width: 400px">
-    <mat-label>Tobacco use</mat-label>
-    <mat-select formControlName="TobaccoUse" required>
-      <mat-option value="1">Never smoker</mat-option>
-      <mat-option value="2">Current every day smoker</mat-option>
-      <mat-option value="3">Current some day smoker</mat-option>
-      <mat-option value="4">Smoker, current status (frequency) unknown</mat-option>
-      <mat-option value="5">Former smoker</mat-option>
-      <mat-option value="6">Smoking status unknown</mat-option>
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field class="item">
+        <mat-label>Dyslipidemia</mat-label>
+        <mat-select formControlName="Dyslip" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+          <mat-option value="3">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
 
+      <mat-form-field class="item">
+        <mat-label>Dialysis</mat-label>
+        <mat-select formControlName="Dialysis" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+          <mat-option value="3">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item">
+        <mat-label>Hypertension</mat-label>
+        <mat-select formControlName="Hypertn" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+          <mat-option value="3">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item">
+        <mat-label>Endocarditis</mat-label>
+        <mat-select formControlName="InfEndo" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" *ngIf="isShowControl('InfEndTy')">
+        <mat-label>Endocarditis Type</mat-label>
+        <mat-select formControlName="InfEndTy" required>
+          <mat-option value="1">Treated</mat-option>
+          <mat-option value="2">Active</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" *ngIf="isShowControl('InfEndCult')">
+        <mat-label>Endocarditis Culture</mat-label>
+        <mat-select formControlName="InfEndCult" required>
+          <mat-option value="1">Culture negative</mat-option>
+          <mat-option value="3">Strep species</mat-option>
+          <mat-option value="11">MRSA</mat-option>
+          <mat-option value="12">MSSA</mat-option>
+          <mat-option value="4">Coagulase negative staph</mat-option>
+          <mat-option value="5">Enterococcus species</mat-option>
+          <mat-option value="9">Gram negative species</mat-option>
+          <mat-option value="10">Polymicrobial</mat-option>
+          <mat-option value="13">Mycobacterium (chimera)</mat-option>
+          <mat-option value="6">Fungal</mat-option>
+          <mat-option value="7">Other</mat-option>
+          <mat-option value="8">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 400px">
+        <mat-label>Tobacco use</mat-label>
+        <mat-select formControlName="TobaccoUse" required>
+          <mat-option value="1">Never smoker</mat-option>
+          <mat-option value="2">Current every day smoker</mat-option>
+          <mat-option value="3">Current some day smoker</mat-option>
+          <mat-option value="4">Smoker, current status (frequency) unknown</mat-option>
+          <mat-option value="5">Former smoker</mat-option>
+          <mat-option value="6">Smoking status unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </mat-expansion-panel>
+  </mat-accordion>
   <button mat-raised-button color="primary" type="submit">Submit</button>
 </form>
+
 <button mat-raised-button color="warn" (click)="clear()">Reset</button>
-<button mat-raised-button color="warn" (click)="formDirective.resetForm(formGroup.value)">Clear error</button>
+<button mat-raised-button color="warn" (click)="formDirective.resetForm(formGroup.value)">
+  Clear error
+</button>
 <button mat-raised-button color="accent" [disabled]="result === undefined" (click)="load()">
   Load
 </button>
@@ -99,3 +182,5 @@
 <br />
 
 <div class="label-text">Form value: {{ formGroup.value | json }}</div>
+
+{{ allExpandState }}
