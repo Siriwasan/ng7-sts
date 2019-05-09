@@ -2,25 +2,32 @@
   allExpandState ? 'Collapse All' : 'Expand All'
 }}</mat-button-toggle>
 
-<form [formGroup]="formGroup" (submit)="submit()" #formDirective="ngForm">
-  <mat-accordion multi="true">
-    <mat-expansion-panel class="accordian" [expanded]="allExpandState">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          A. Administrative
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+<mat-accordion multi="true" class="my-headers-align">
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        A. Administrative
+      </mat-panel-title>
+    </mat-expansion-panel-header>
 
-      Test
-    </mat-expansion-panel>
+    <p>This is the primary content of the panel.</p>
 
-    <mat-expansion-panel class="accordian" [expanded]="allExpandState">
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          D. Risk Factors
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+    <mat-action-row>
+      <button mat-button>Click me</button>
+    </mat-action-row>
+  </mat-expansion-panel>
 
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        D. Risk Factors
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ formErrors('D') }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="formGroupD" #formDirectiveD="ngForm">
       <div fxLayout="column" fxLayout.gt-xs="row">
         <mat-form-field class="item">
           <input
@@ -62,7 +69,7 @@
         </mat-form-field>
       </div>
 
-      <mat-form-field class="item" style="width: 400px" fxLayout="column">
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
         <mat-label>Family History of Premature Coronary Artery Disease</mat-label>
         <mat-select formControlName="FHCAD" required>
           <mat-option value="1">Yes</mat-option>
@@ -80,7 +87,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item" *ngIf="isShowControl('DiabCtrl')">
+      <mat-form-field class="item" *ngIf="isShowControl('D', 'DiabCtrl')">
         <mat-label>Diabetes-Control</mat-label>
         <mat-select formControlName="DiabCtrl" required>
           <mat-option value="1">None</mat-option>
@@ -128,7 +135,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item" *ngIf="isShowControl('InfEndTy')">
+      <mat-form-field class="item" *ngIf="isShowControl('D', 'InfEndTy')">
         <mat-label>Endocarditis Type</mat-label>
         <mat-select formControlName="InfEndTy" required>
           <mat-option value="1">Treated</mat-option>
@@ -136,7 +143,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item" *ngIf="isShowControl('InfEndCult')">
+      <mat-form-field class="item" *ngIf="isShowControl('D', 'InfEndCult')">
         <mat-label>Endocarditis Culture</mat-label>
         <mat-select formControlName="InfEndCult" required>
           <mat-option value="1">Culture negative</mat-option>
@@ -165,22 +172,69 @@
           <mat-option value="6">Smoking status unknown</mat-option>
         </mat-select>
       </mat-form-field>
-    </mat-expansion-panel>
-  </mat-accordion>
-  <button mat-raised-button color="primary" type="submit">Submit</button>
-</form>
+    </form>
+  </mat-expansion-panel>
 
-<button mat-raised-button color="warn" (click)="clear()">Reset</button>
-<button mat-raised-button color="warn" (click)="formDirective.resetForm(formGroup.value)">
-  Clear error
-</button>
-<button mat-raised-button color="accent" [disabled]="result === undefined" (click)="load()">
-  Load
-</button>
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        E. Previous Cardiac Interventions
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ formErrors('E') }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="formGroupE" #formDirectiveE="ngForm">
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Previous Cardiac Interventions</mat-label>
+        <mat-select formControlName="PrCVInt" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+          <mat-option value="3">Unknown</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('E', 'PrCAB')"
+      >
+        <mat-label>Previous coronary artery bypass</mat-label>
+        <mat-select formControlName="PrCAB" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('E', 'PrValve')"
+      >
+        <mat-label>Previous valve procedure</mat-label>
+        <mat-select formControlName="PrValve" required>
+          <mat-option value="1">Yes</mat-option>
+          <mat-option value="2">No</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>
 
 <br />
 <br />
+<button mat-raised-button class="item" color="primary" (click)="submitAll()">Submit All</button>
+<button mat-raised-button class="item" color="warn" (click)="clearAll()">Clear All</button>
+<button mat-raised-button class="item" color="warn" (click)="clearErrors()">Clear Errors</button>
+<button mat-raised-button class="item" color="accent" (click)="loadAll()">Load All</button>
+<br />
 
-<div class="label-text">Form value: {{ formGroup.value | json }}</div>
+<div class="label-text">FormD value: {{ formGroupD.value | json }}</div>
+<div class="label-text">FormE value: {{ formGroupE.value | json }}</div>
+<div class="label-text">Result value: {{ result | json }}</div>
+<div class="label-text">Flat Result value: {{ flatResult | json }}</div>
 
-{{ allExpandState }}
+<div class="label-text">FormD status: {{ formGroupD.status }}</div>

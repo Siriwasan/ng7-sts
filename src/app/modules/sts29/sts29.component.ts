@@ -1,10 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormGroupDirective } from '@angular/forms';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormGroupDirective,
+  ValidationErrors
+} from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 
 import { RegistryInfoDialogComponent } from 'src/app/shared/components/registry-info-dialog/registry-info-dialog.component';
 
-interface ControlCondition {
+interface STS29Model {
+  sectionD: object;
+  sectionE: object;
+}
+
+interface FormCondition {
   control: string;
   parentControl: string;
   conditionValues: any[];
@@ -16,11 +27,15 @@ interface ControlCondition {
   styleUrls: ['./sts29.component.scss']
 })
 export class STS29Component implements OnInit {
-  formGroup: FormGroup;
-  result: object;
+  result: STS29Model;
+  flatResult: object;
   allExpandState = false;
 
-  @ViewChild('formDirective') private formDirective: FormGroupDirective;
+  formGroupD: FormGroup;
+  formGroupE: FormGroup;
+
+  @ViewChild('formDirectiveD') formDirectiveD: FormGroupDirective;
+  @ViewChild('formDirectiveE') formDirectiveE: FormGroupDirective;
 
   validationMessages = {
     HeightCM: [
@@ -40,81 +55,143 @@ export class STS29Component implements OnInit {
     ]
   };
 
-  controlConditions: ControlCondition[] = [
-    { control: 'DiabCtrl', parentControl: 'Diabetes', conditionValues: ['1', '2'] },
-    { control: 'InfEndTy', parentControl: 'InfEndo', conditionValues: ['1'] },
-    { control: 'InfEndCult', parentControl: 'InfEndo', conditionValues: ['1'] }
-  ];
+  formConditions = {
+    sectionD: [
+      { control: 'DiabCtrl', parentControl: 'Diabetes', conditionValues: ['1'] },
+      { control: 'InfEndTy', parentControl: 'InfEndo', conditionValues: ['1'] },
+      { control: 'InfEndCult', parentControl: 'InfEndo', conditionValues: ['1'] }
+    ],
+    sectionE: [
+      { control: 'PrCAB', parentControl: 'PrCVInt', conditionValues: ['1'] },
+      { control: 'PrValve', parentControl: 'PrCVInt', conditionValues: ['1'] }
+    ]
+  };
 
   constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.createForm();
-    this.subscribeValueChanges();
+    this.createFormConditions();
   }
 
-  private subscribeValueChanges() {
-    this.controlConditions.forEach(condition => {
-      this.formGroup.get(condition.parentControl).valueChanges.subscribe(newValue => {
+  createForm() {
+    this.formGroupD = this.formBuilder.group({
+      HeightCM: [null, [Validators.required, Validators.min(20), Validators.max(251)]],
+      WeightKg: [null, [Validators.required, Validators.min(10), Validators.max(250)]],
+      FHCAD: [null, Validators.required],
+      Diabetes: [null, Validators.required],
+      DiabCtrl: [null],
+      Dyslip: [null, Validators.required],
+      Dialysis: [null, Validators.required],
+      Hypertn: [null, Validators.required],
+      InfEndo: [null, Validators.required],
+      InfEndTy: [null],
+      InfEndCult: [null],
+      TobaccoUse: [null, Validators.required]
+    });
+
+    this.formGroupE = this.formBuilder.group({
+      PrCVInt: [null, Validators.required],
+      PrCAB: [null],
+      PrValve: [null]
+    });
+  }
+
+  private createFormConditions() {
+    this.subscribeValueChanges(this.formGroupD, this.formConditions.sectionD);
+    this.subscribeValueChanges(this.formGroupE, this.formConditions.sectionE);
+  }
+
+  private subscribeValueChanges(form: FormGroup, formConditions: FormCondition[]) {
+    formConditions.forEach(condition => {
+      form.get(condition.parentControl).valueChanges.subscribe(newValue => {
         if (condition.conditionValues.findIndex(o => o === newValue) < 0) {
-          this.formGroup.get(condition.control).reset();
+          form.get(condition.control).setValidators(null);
+          form.get(condition.control).reset();
+          // this.formGroup.get(condition.control).disable();
+          console.log('clear validator');
+        } else {
+          form.get(condition.control).setValidators(Validators.required);
+          // this.formGroup.get(condition.control).enable();
+          console.log('set validator');
         }
       });
     });
   }
 
-  isShowControl(controlName: string): boolean {
-    const controlCondition = this.controlConditions.find(
-      condition => condition.control === controlName
-    );
+  getFormGroup(section: string): FormGroup {
+    switch (section) {
+      case 'D':
+        return this.formGroupD;
 
-    if (controlCondition === undefined) {
-      console.log('No condition for ' + controlName);
+      case 'E':
+        return this.formGroupE;
+
+      default:
+        return null;
+    }
+  }
+
+  getFormConditions(section: string): FormCondition[] {
+    switch (section) {
+      case 'D':
+        return this.formConditions.sectionD;
+
+      case 'E':
+        return this.formConditions.sectionE;
+
+      default:
+        return null;
+    }
+  }
+
+  isShowControl(section: string, controlName: string): boolean {
+    const form = this.getFormGroup(section);
+    const formConditions = this.getFormConditions(section);
+
+    const formCondition = formConditions.find(condition => condition.control === controlName);
+
+    if (formCondition === undefined) {
       return true;
     }
 
-    const parentValue = this.formGroup.get(controlCondition.parentControl).value;
-
-    if (controlCondition.conditionValues.findIndex(o => o === parentValue) < 0) {
+    const parentValue = form.get(formCondition.parentControl).value;
+    if (formCondition.conditionValues.findIndex(o => o === parentValue) < 0) {
       return false;
     }
 
     return true;
   }
 
-  createForm() {
-    this.formGroup = this.formBuilder.group({
-      HeightCM: [null, [Validators.required, Validators.min(20), Validators.max(251)]],
-      WeightKg: [null, [Validators.required, Validators.min(10), Validators.max(250)]],
-      FHCAD: [null, Validators.required],
-      Diabetes: [null, Validators.required],
-      DiabCtrl: [null, Validators.required],
-      Dyslip: [null, Validators.required],
-      Dialysis: [null, Validators.required],
-      Hypertn: [null, Validators.required],
-      InfEndo: [null, Validators.required],
-      InfEndTy: [null, Validators.required],
-      InfEndCult: [null, Validators.required],
-      TobaccoUse: [null, Validators.required]
-    });
+  submitAll() {
+    console.log('submit all');
+    this.formDirectiveD.onSubmit(undefined);
+    this.formDirectiveE.onSubmit(undefined);
+    this.result = {
+      sectionD: { ...this.formGroupD.value },
+      sectionE: { ...this.formGroupE.value }
+    };
+    this.flatResult = { ...this.result.sectionD, ...this.result.sectionE };
   }
 
-  submit() {
-    console.log(this.formGroup);
-    this.result = { ...this.formGroup.value };
+  loadAll() {
+    console.log('load all');
+    this.formGroupD.setValue(this.result.sectionD);
+    this.formGroupE.setValue(this.result.sectionE);
   }
 
-  clear() {
-    this.formDirective.resetForm();
-    // this.formGroup.reset();
+  clearAll() {
+    this.formDirectiveD.resetForm();
+    this.formDirectiveE.resetForm();
   }
 
-  load() {
-    this.formGroup.setValue(this.result);
+  clearErrors() {
+    this.formDirectiveD.resetForm(this.formGroupD.value);
+    this.formDirectiveE.resetForm(this.formGroupE.value);
   }
 
   isInvalid(control: string, validationType: string) {
-    return this.formGroup.get(control).hasError(validationType);
+    return this.formGroupD.get(control).hasError(validationType);
     // &&       (this.formGroup.get(control).dirty || this.formGroup.get(control).touched)
   }
 
@@ -129,5 +206,30 @@ export class STS29Component implements OnInit {
     dialogConfig.autoFocus = true;
 
     this.dialog.open(RegistryInfoDialogComponent, dialogConfig);
+  }
+
+  formErrors(formSection: string): string {
+    let error = 0;
+    let total = 0;
+
+    const form = this.getFormGroup(formSection);
+
+    Object.keys(form.controls).forEach(key => {
+      const controlErrors: ValidationErrors = form.get(key).errors;
+      if (controlErrors != null) {
+        Object.keys(controlErrors).forEach(keyError => {
+          // console.log(
+          //   'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
+          //   controlErrors[keyError]
+          // );
+        });
+        error++;
+      }
+      if (this.isShowControl(formSection, key)) {
+        total++;
+      }
+    });
+
+    return `${total - error}/${total}`;
   }
 }
