@@ -8,18 +8,10 @@ import {
 } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 
-import { RegistryInfoDialogComponent } from 'src/app/shared/components/registry-info-dialog/registry-info-dialog.component';
-
-interface STS29Model {
-  sectionD: object;
-  sectionE: object;
-}
-
-interface FormCondition {
-  control: string;
-  parentControl: string;
-  conditionValues: any[];
-}
+import { RegistryInfoDialogComponent } from '../../shared/components/registry-info-dialog/registry-info-dialog.component';
+import { STS29Model, STS29form } from './sts29.model';
+import { FormCondition, formConditions } from './sts29.condition';
+import { validationMessages } from './sts29.validation';
 
 @Component({
   selector: 'app-sts29',
@@ -31,41 +23,15 @@ export class STS29Component implements OnInit {
   flatResult: object;
   allExpandState = false;
 
+  get validationMessages() {
+    return validationMessages;
+  }
+
   formGroupD: FormGroup;
   formGroupE: FormGroup;
 
   @ViewChild('formDirectiveD') formDirectiveD: FormGroupDirective;
   @ViewChild('formDirectiveE') formDirectiveE: FormGroupDirective;
-
-  validationMessages = {
-    HeightCM: [
-      { type: 'required', message: 'Height is required' },
-      { type: 'min', message: 'Height must be at least 20 cm' },
-      { type: 'max', message: 'Height cannot be more than 251 cm' }
-    ],
-    WeightKg: [
-      { type: 'required', message: 'Weight is required' },
-      { type: 'min', message: 'Weight must be at least 10 kg' },
-      { type: 'max', message: 'Weight cannot be more than 250 kg' }
-    ],
-    Temp: [
-      { type: 'required', message: 'Username is required' },
-      { type: 'minlength', message: 'Username must be at least 5 characters long' },
-      { type: 'maxlength', message: 'Username cannot be more than 25 characters long' }
-    ]
-  };
-
-  formConditions = {
-    sectionD: [
-      { control: 'DiabCtrl', parentControl: 'Diabetes', conditionValues: ['1'] },
-      { control: 'InfEndTy', parentControl: 'InfEndo', conditionValues: ['1'] },
-      { control: 'InfEndCult', parentControl: 'InfEndo', conditionValues: ['1'] }
-    ],
-    sectionE: [
-      { control: 'PrCAB', parentControl: 'PrCVInt', conditionValues: ['1'] },
-      { control: 'PrValve', parentControl: 'PrCVInt', conditionValues: ['1'] }
-    ]
-  };
 
   constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {}
 
@@ -75,35 +41,17 @@ export class STS29Component implements OnInit {
   }
 
   createForm() {
-    this.formGroupD = this.formBuilder.group({
-      HeightCM: [null, [Validators.required, Validators.min(20), Validators.max(251)]],
-      WeightKg: [null, [Validators.required, Validators.min(10), Validators.max(250)]],
-      FHCAD: [null, Validators.required],
-      Diabetes: [null, Validators.required],
-      DiabCtrl: [null],
-      Dyslip: [null, Validators.required],
-      Dialysis: [null, Validators.required],
-      Hypertn: [null, Validators.required],
-      InfEndo: [null, Validators.required],
-      InfEndTy: [null],
-      InfEndCult: [null],
-      TobaccoUse: [null, Validators.required]
-    });
-
-    this.formGroupE = this.formBuilder.group({
-      PrCVInt: [null, Validators.required],
-      PrCAB: [null],
-      PrValve: [null]
-    });
+    this.formGroupD = this.formBuilder.group(STS29form.sectionD);
+    this.formGroupE = this.formBuilder.group(STS29form.sectionE);
   }
 
   private createFormConditions() {
-    this.subscribeValueChanges(this.formGroupD, this.formConditions.sectionD);
-    this.subscribeValueChanges(this.formGroupE, this.formConditions.sectionE);
+    this.subscribeValueChanges(this.formGroupD, formConditions.sectionD);
+    this.subscribeValueChanges(this.formGroupE, formConditions.sectionE);
   }
 
-  private subscribeValueChanges(form: FormGroup, formConditions: FormCondition[]) {
-    formConditions.forEach(condition => {
+  private subscribeValueChanges(form: FormGroup, condisions: FormCondition[]) {
+    condisions.forEach(condition => {
       form.get(condition.parentControl).valueChanges.subscribe(newValue => {
         if (condition.conditionValues.findIndex(o => o === newValue) < 0) {
           form.get(condition.control).setValidators(null);
@@ -135,10 +83,10 @@ export class STS29Component implements OnInit {
   getFormConditions(section: string): FormCondition[] {
     switch (section) {
       case 'D':
-        return this.formConditions.sectionD;
+        return formConditions.sectionD;
 
       case 'E':
-        return this.formConditions.sectionE;
+        return formConditions.sectionE;
 
       default:
         return null;
@@ -147,9 +95,9 @@ export class STS29Component implements OnInit {
 
   isShowControl(section: string, controlName: string): boolean {
     const form = this.getFormGroup(section);
-    const formConditions = this.getFormConditions(section);
+    const condisions = this.getFormConditions(section);
 
-    const formCondition = formConditions.find(condition => condition.control === controlName);
+    const formCondition = condisions.find(condition => condition.control === controlName);
 
     if (formCondition === undefined) {
       return true;
@@ -168,6 +116,10 @@ export class STS29Component implements OnInit {
     this.formDirectiveD.onSubmit(undefined);
     this.formDirectiveE.onSubmit(undefined);
     this.result = {
+      description: {
+        baseDb: 'STS version 2.9',
+        addendum: 'BDMS modefied version 1.0'
+      },
       sectionD: { ...this.formGroupD.value },
       sectionE: { ...this.formGroupE.value }
     };

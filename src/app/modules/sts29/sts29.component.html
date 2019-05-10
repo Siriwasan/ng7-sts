@@ -80,9 +80,10 @@
             <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
           </mat-hint>
           <mat-error *ngFor="let validation of validationMessages.WeightKg">
-            <mat-error *ngIf="isInvalid('WeightKg', validation.type)">{{
-              validation.message
-            }}</mat-error>
+            <mat-error *ngIf="isInvalid('WeightKg', validation.type)">
+              <a>{{ validation.message }}</a>
+              <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+            </mat-error>
           </mat-error>
         </mat-form-field>
       </div>

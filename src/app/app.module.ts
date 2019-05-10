@@ -8,7 +8,6 @@ import { WelcomeComponent } from './modules/welcome/welcome.component';
 import { HomeComponent } from './modules/home/home.component';
 import { AboutComponent } from './modules/about/about.component';
 import { STS29Component } from './modules/sts29/sts29.component';
-import { RegistryInfoDialogComponent } from './shared/components/registry-info-dialog/registry-info-dialog.component';
 
 @NgModule({
   declarations: [
@@ -16,12 +15,10 @@ import { RegistryInfoDialogComponent } from './shared/components/registry-info-d
     WelcomeComponent,
     HomeComponent,
     AboutComponent,
-    STS29Component,
-    RegistryInfoDialogComponent
+    STS29Component
   ],
   imports: [CoreModule, SharedModule, AppRoutingModule],
   providers: [],
   bootstrap: [AppComponent],
-  entryComponents: [RegistryInfoDialogComponent]
 })
 export class AppModule {}

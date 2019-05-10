@@ -5,9 +5,10 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MaterialModule } from '../shared/material.module';
+import { RegistryInfoDialogComponent } from './components/registry-info-dialog/registry-info-dialog.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [RegistryInfoDialogComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -23,6 +24,7 @@ import { MaterialModule } from '../shared/material.module';
     ReactiveFormsModule,
     MaterialModule,
     FlexLayoutModule
-  ]
+  ],
+  entryComponents: [RegistryInfoDialogComponent]
 })
 export class SharedModule {}
