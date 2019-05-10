@@ -2,6 +2,8 @@
   allExpandState ? 'Collapse All' : 'Expand All'
 }}</mat-button-toggle>
 
+<!-- <a id="facebook_ads_example">This is the Facebook ad example I want to link to.</a> -->
+
 <mat-accordion multi="true" class="my-headers-align">
   <mat-expansion-panel class="accordian" [expanded]="allExpandState">
     <mat-expansion-panel-header>
@@ -15,6 +17,22 @@
     <mat-action-row>
       <button mat-button>Click me</button>
     </mat-action-row>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        B. Demographics
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        C. Hospitalization
+      </mat-panel-title>
+    </mat-expansion-panel-header>
   </mat-expansion-panel>
 
   <mat-expansion-panel class="accordian" [expanded]="allExpandState">
@@ -87,7 +105,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item" *ngIf="isShowControl('D', 'DiabCtrl')">
+      <mat-form-field class="item-1" *ngIf="isShowControl('D', 'DiabCtrl')">
         <mat-label>Diabetes-Control</mat-label>
         <mat-select formControlName="DiabCtrl" required>
           <mat-option value="1">None</mat-option>
@@ -135,7 +153,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item" *ngIf="isShowControl('D', 'InfEndTy')">
+      <mat-form-field class="item-1" *ngIf="isShowControl('D', 'InfEndTy')">
         <mat-label>Endocarditis Type</mat-label>
         <mat-select formControlName="InfEndTy" required>
           <mat-option value="1">Treated</mat-option>
@@ -143,7 +161,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item" *ngIf="isShowControl('D', 'InfEndCult')">
+      <mat-form-field class="item-1" *ngIf="isShowControl('D', 'InfEndCult')">
         <mat-label>Endocarditis Culture</mat-label>
         <mat-select formControlName="InfEndCult" required>
           <mat-option value="1">Culture negative</mat-option>
@@ -196,7 +214,7 @@
       </mat-form-field>
 
       <mat-form-field
-        class="item"
+        class="item-1"
         style="width: 250px"
         fxLayout="column"
         *ngIf="isShowControl('E', 'PrCAB')"
@@ -209,7 +227,7 @@
       </mat-form-field>
 
       <mat-form-field
-        class="item"
+        class="item-1"
         style="width: 250px"
         fxLayout="column"
         *ngIf="isShowControl('E', 'PrValve')"
@@ -221,6 +239,142 @@
         </mat-select>
       </mat-form-field>
     </form>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        F. Preoperative Cardiac Status
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        G. Preoperative Medication
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        H. Hemodynamics/Cath/Echo
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        I. Operative
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        J. Coronary Bypass
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        K. Valve Surgery
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        L. Mechanical Cardiac Assist Devices
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        L.2 Ventricular Assist Devices
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        M. Other Cardiac Procedures
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        M.1. Atrial Fibrillation Procedures
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        M.2. Aorta And Aortic Root Procedures
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        M.3. Congenital Defect Repair (other than ASD, VSD or Bicuspid valve)
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        N. Other Non-Cardiac Procedures
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        O. Post-Operative
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        P. Postoperative Events
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Q. Discharge / Mortality
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+
+  <mat-expansion-panel class="accordian" [expanded]="allExpandState">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        R. Readmission
+      </mat-panel-title>
+    </mat-expansion-panel-header>
   </mat-expansion-panel>
 </mat-accordion>
 
@@ -238,3 +392,7 @@
 <div class="label-text">Flat Result value: {{ flatResult | json }}</div>
 
 <div class="label-text">FormD status: {{ formGroupD.status }}</div>
+
+<a href="sts29#facebook_ads_example"
+  >Click here to see an example of how a company uses Facebook ads.</a
+>

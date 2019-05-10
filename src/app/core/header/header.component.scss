@@ -18,3 +18,10 @@ a:active {
   display: inline-block;
   padding-left: 6px;
 }
+
+.fixed-header {
+  top: 0;
+  position: sticky;
+  position: -webkit-sticky;
+  z-index: 999;
+}
