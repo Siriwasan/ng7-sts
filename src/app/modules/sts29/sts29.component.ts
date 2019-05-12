@@ -12,6 +12,7 @@ import { RegistryInfoDialogComponent } from '../../shared/components/registry-in
 import { STS29Model, STS29form } from './sts29.model';
 import { FormCondition, formConditions } from './sts29.condition';
 import { validationMessages } from './sts29.validation';
+import { STS29Service } from './sts29.service';
 
 @Component({
   selector: 'app-sts29',
@@ -33,7 +34,11 @@ export class STS29Component implements OnInit {
   @ViewChild('formDirectiveD') formDirectiveD: FormGroupDirective;
   @ViewChild('formDirectiveE') formDirectiveE: FormGroupDirective;
 
-  constructor(private formBuilder: FormBuilder, private dialog: MatDialog) {}
+  constructor(
+    private formBuilder: FormBuilder,
+    private dialog: MatDialog,
+    private sts29Service: STS29Service
+  ) {}
 
   ngOnInit() {
     this.createForm();
@@ -124,12 +129,19 @@ export class STS29Component implements OnInit {
       sectionE: { ...this.formGroupE.value }
     };
     this.flatResult = { ...this.result.sectionD, ...this.result.sectionE };
+
+    this.sts29Service.saveForm(this.result);
   }
 
   loadAll() {
     console.log('load all');
-    this.formGroupD.setValue(this.result.sectionD);
-    this.formGroupE.setValue(this.result.sectionE);
+    // this.formGroupD.setValue(this.result.sectionD);
+    // this.formGroupE.setValue(this.result.sectionE);
+    this.sts29Service.loadForm().subscribe(data => {
+      console.log(data[0]);
+      this.formGroupD.setValue(data[0].sectionD);
+      this.formGroupE.setValue(data[0].sectionE);
+    });
   }
 
   clearAll() {
