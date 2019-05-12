@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -7,12 +7,18 @@ import {
   ValidationErrors
 } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
+import { map, first } from 'rxjs/operators';
 
 import { RegistryInfoDialogComponent } from '../../shared/components/registry-info-dialog/registry-info-dialog.component';
 import { STS29Model, STS29form } from './sts29.model';
 import { FormCondition, formConditions } from './sts29.condition';
 import { validationMessages } from './sts29.validation';
 import { STS29Service } from './sts29.service';
+import {
+  ConfirmDialogComponent,
+  DialogData
+} from '../../shared/components/confirm-dialog/confirm-dialog.component';
+import { DialogService } from 'src/app/shared/services/dialog.service';
 
 @Component({
   selector: 'app-sts29',
@@ -37,7 +43,8 @@ export class STS29Component implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
-    private sts29Service: STS29Service
+    private sts29Service: STS29Service,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -116,8 +123,8 @@ export class STS29Component implements OnInit {
     return true;
   }
 
-  submitAll() {
-    console.log('submit all');
+  submit() {
+    console.log('submit');
     this.formDirectiveD.onSubmit(undefined);
     this.formDirectiveE.onSubmit(undefined);
     this.result = {
@@ -133,8 +140,8 @@ export class STS29Component implements OnInit {
     this.sts29Service.saveForm(this.result);
   }
 
-  loadAll() {
-    console.log('load all');
+  load() {
+    console.log('load');
     // this.formGroupD.setValue(this.result.sectionD);
     // this.formGroupE.setValue(this.result.sectionE);
     this.sts29Service.loadForm().subscribe(data => {
@@ -144,7 +151,7 @@ export class STS29Component implements OnInit {
     });
   }
 
-  clearAll() {
+  clear() {
     this.formDirectiveD.resetForm();
     this.formDirectiveE.resetForm();
   }
@@ -195,5 +202,34 @@ export class STS29Component implements OnInit {
     });
 
     return `${total - error}/${total}`;
+  }
+
+  // @HostListener('window:beforeunload', ['$event'])
+  // unloadHandler(event: Event) {
+  //   console.log('Processing beforeunload...');
+  //   event.returnValue = false;
+  // }
+
+  canDeactivate() {
+    // return confirm('Do you really want to leave?');
+    // return this.form.submitted || !this.form.dirty;
+
+    const dialogRef = this.dialogService.createConfirmDialog({
+      title: 'Warning!!!',
+      content: 'Save before leave',
+      buttons: ['Cancel', 'Discard']
+    });
+
+    return dialogRef.afterClosed().pipe(
+      map(result => {
+        if (result === 'Cancel') {
+          return false;
+        }
+        if (result === 'Discard') {
+          return true;
+        }
+      }),
+      first()
+    );
   }
 }

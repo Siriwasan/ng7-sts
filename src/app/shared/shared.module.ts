@@ -6,9 +6,11 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MaterialModule } from '../shared/material.module';
 import { RegistryInfoDialogComponent } from './components/registry-info-dialog/registry-info-dialog.component';
+import { DeactivateGuard } from './guards/deactivate.guard';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
-  declarations: [RegistryInfoDialogComponent],
+  declarations: [RegistryInfoDialogComponent, ConfirmDialogComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -25,6 +27,7 @@ import { RegistryInfoDialogComponent } from './components/registry-info-dialog/r
     MaterialModule,
     FlexLayoutModule
   ],
-  entryComponents: [RegistryInfoDialogComponent]
+  providers: [DeactivateGuard],
+  entryComponents: [RegistryInfoDialogComponent, ConfirmDialogComponent]
 })
 export class SharedModule {}

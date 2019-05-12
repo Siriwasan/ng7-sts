@@ -5,12 +5,13 @@ import { WelcomeComponent } from './modules/welcome/welcome.component';
 import { HomeComponent } from './modules/home/home.component';
 import { AboutComponent } from './modules/about/about.component';
 import { STS29Component } from './modules/sts29/sts29.component';
+import { DeactivateGuard } from './shared/guards/deactivate.guard';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent },
   { path: 'home', component: HomeComponent },
   { path: 'about', component: AboutComponent },
-  { path: 'sts29', component: STS29Component },
+  { path: 'sts29', component: STS29Component, canDeactivate: [DeactivateGuard] }
 ];
 
 @NgModule({
