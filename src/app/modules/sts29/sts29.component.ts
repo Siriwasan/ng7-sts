@@ -8,17 +8,18 @@ import {
 } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { map, first } from 'rxjs/operators';
+import { Store } from '@ngrx/store';
 
 import { RegistryInfoDialogComponent } from '../../shared/components/registry-info-dialog/registry-info-dialog.component';
 import { STS29Model, STS29form } from './sts29.model';
 import { FormCondition, formConditions } from './sts29.condition';
 import { validationMessages } from './sts29.validation';
 import { STS29Service } from './sts29.service';
-import {
-  ConfirmDialogComponent,
-  DialogData
-} from '../../shared/components/confirm-dialog/confirm-dialog.component';
-import { DialogService } from 'src/app/shared/services/dialog.service';
+import { DialogService } from '../../shared/services/dialog.service';
+
+import * as fromRoot from '../../app.reducer';
+import * as UI from '../../shared/ui.actions';
+
 
 @Component({
   selector: 'app-sts29',
@@ -44,10 +45,12 @@ export class STS29Component implements OnInit {
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private sts29Service: STS29Service,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private store: Store<fromRoot.State>
   ) {}
 
   ngOnInit() {
+    this.store.dispatch(new UI.ChangeTitle('STS 2.9'));
     this.createForm();
     this.createFormConditions();
   }
@@ -142,12 +145,15 @@ export class STS29Component implements OnInit {
 
   load() {
     console.log('load');
+    this.store.dispatch(new UI.StartLoading());
+
     // this.formGroupD.setValue(this.result.sectionD);
     // this.formGroupE.setValue(this.result.sectionE);
     this.sts29Service.loadForm().subscribe(data => {
       console.log(data[0]);
       this.formGroupD.setValue(data[0].sectionD);
       this.formGroupE.setValue(data[0].sectionE);
+      this.store.dispatch(new UI.StopLoading());
     });
   }
 

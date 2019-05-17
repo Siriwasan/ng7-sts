@@ -1,4 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+import * as fromRoot from '../../app.reducer';
 
 @Component({
   selector: 'app-header',
@@ -6,11 +10,15 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  title$: Observable<string>;
+
   @Output() sidenavToggle = new EventEmitter<void>();
 
-  constructor() {}
+  constructor(private store: Store<fromRoot.State>) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.title$ = this.store.select(fromRoot.getTitle);
+  }
 
   onToggleSidenav() {
     this.sidenavToggle.emit();

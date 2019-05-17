@@ -18,12 +18,4 @@ export class ConfirmDialogComponent implements OnInit {
   ngOnInit() {
     this.divID.nativeElement.innerHTML = this.data.content;
   }
-
-  close() {
-    this.dialogRef.close();
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }
