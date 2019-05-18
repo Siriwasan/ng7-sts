@@ -1,39 +1,30 @@
-import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
-import {
-  FormGroup,
-  FormBuilder,
-  Validators,
-  FormGroupDirective,
-  ValidationErrors
-} from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, FormGroupDirective } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material';
-import { map, first } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 
-import { RegistryInfoDialogComponent } from '../../shared/components/registry-info-dialog/registry-info-dialog.component';
-import { STS29Model, STS29form } from './sts29.model';
-import { FormCondition, formConditions } from './sts29.condition';
+import { FormBasedComponent } from '../../shared/components/form-based/form-based.component';
+import { STS29Model } from './sts29.model';
+import { STS29form } from './sts29.form';
+import { formConditions } from './sts29.condition';
 import { validationMessages } from './sts29.validation';
 import { STS29Service } from './sts29.service';
-import { DialogService } from '../../shared/services/dialog.service';
 
 import * as fromRoot from '../../app.reducer';
 import * as UI from '../../shared/ui.actions';
 
+import { RegistryInfoDialogComponent } from '../../shared/components/registry-info-dialog/registry-info-dialog.component';
+import { DialogService } from '../../shared/services/dialog.service';
 
 @Component({
   selector: 'app-sts29',
   templateUrl: './sts29.component.html',
   styleUrls: ['./sts29.component.scss']
 })
-export class STS29Component implements OnInit {
+export class STS29Component extends FormBasedComponent implements OnInit {
   result: STS29Model;
   flatResult: object;
   allExpandState = false;
-
-  get validationMessages() {
-    return validationMessages;
-  }
 
   formGroupD: FormGroup;
   formGroupE: FormGroup;
@@ -47,89 +38,38 @@ export class STS29Component implements OnInit {
     private sts29Service: STS29Service,
     private dialogService: DialogService,
     private store: Store<fromRoot.State>
-  ) {}
+  ) {
+    super(dialogService);
+  }
 
   ngOnInit() {
     this.store.dispatch(new UI.ChangeTitle('STS 2.9'));
     this.createForm();
     this.createFormConditions();
+    this.setValidations(validationMessages);
   }
 
-  createForm() {
+  private createForm() {
     this.formGroupD = this.formBuilder.group(STS29form.sectionD);
     this.formGroupE = this.formBuilder.group(STS29form.sectionE);
+
+    this.setSections('DE');
+    this.sectionDetails = [
+      ['D', this.formGroupD, formConditions.sectionD, this.formDirectiveD],
+      ['E', this.formGroupE, formConditions.sectionE, this.formDirectiveE]
+    ];
   }
 
-  private createFormConditions() {
-    this.subscribeValueChanges(this.formGroupD, formConditions.sectionD);
-    this.subscribeValueChanges(this.formGroupE, formConditions.sectionE);
-  }
-
-  private subscribeValueChanges(form: FormGroup, condisions: FormCondition[]) {
-    condisions.forEach(condition => {
-      form.get(condition.parentControl).valueChanges.subscribe(newValue => {
-        if (condition.conditionValues.findIndex(o => o === newValue) < 0) {
-          form.get(condition.control).setValidators(null);
-          form.get(condition.control).reset();
-          // this.formGroup.get(condition.control).disable();
-          console.log('clear validator');
-        } else {
-          form.get(condition.control).setValidators(Validators.required);
-          // this.formGroup.get(condition.control).enable();
-          console.log('set validator');
-        }
-      });
+  submitAllSections() {
+    this.sections.split('').forEach(section => {
+      this.getFormDirective(section).onSubmit(undefined);
     });
-  }
-
-  getFormGroup(section: string): FormGroup {
-    switch (section) {
-      case 'D':
-        return this.formGroupD;
-
-      case 'E':
-        return this.formGroupE;
-
-      default:
-        return null;
-    }
-  }
-
-  getFormConditions(section: string): FormCondition[] {
-    switch (section) {
-      case 'D':
-        return formConditions.sectionD;
-
-      case 'E':
-        return formConditions.sectionE;
-
-      default:
-        return null;
-    }
-  }
-
-  isShowControl(section: string, controlName: string): boolean {
-    const form = this.getFormGroup(section);
-    const condisions = this.getFormConditions(section);
-
-    const formCondition = condisions.find(condition => condition.control === controlName);
-
-    if (formCondition === undefined) {
-      return true;
-    }
-
-    const parentValue = form.get(formCondition.parentControl).value;
-    if (formCondition.conditionValues.findIndex(o => o === parentValue) < 0) {
-      return false;
-    }
-
-    return true;
   }
 
   submit() {
     console.log('submit');
-    this.formDirectiveD.onSubmit(undefined);
-    this.formDirectiveE.onSubmit(undefined);
+    this.submitAllSections();
+
     this.result = {
       description: {
         baseDb: 'STS version 2.9',
@@ -140,15 +80,13 @@ export class STS29Component implements OnInit {
     };
     this.flatResult = { ...this.result.sectionD, ...this.result.sectionE };
 
-    this.sts29Service.saveForm(this.result);
+    // this.sts29Service.saveForm(this.result);
   }
 
   load() {
     console.log('load');
     this.store.dispatch(new UI.StartLoading());
 
-    // this.formGroupD.setValue(this.result.sectionD);
-    // this.formGroupE.setValue(this.result.sectionE);
     this.sts29Service.loadForm().subscribe(data => {
       console.log(data[0]);
       this.formGroupD.setValue(data[0].sectionD);
@@ -158,18 +96,15 @@ export class STS29Component implements OnInit {
   }
 
   clear() {
-    this.formDirectiveD.resetForm();
-    this.formDirectiveE.resetForm();
+    this.sections.split('').forEach(section => {
+      this.getFormDirective(section).resetForm();
+    });
   }
 
   clearErrors() {
-    this.formDirectiveD.resetForm(this.formGroupD.value);
-    this.formDirectiveE.resetForm(this.formGroupE.value);
-  }
-
-  isInvalid(control: string, validationType: string) {
-    return this.formGroupD.get(control).hasError(validationType);
-    // &&       (this.formGroup.get(control).dirty || this.formGroup.get(control).touched)
+    this.sections.split('').forEach(section => {
+      this.getFormDirective(section).resetForm(this.getFormGroup(section).value);
+    });
   }
 
   clickInfo() {
@@ -183,59 +118,5 @@ export class STS29Component implements OnInit {
     dialogConfig.autoFocus = true;
 
     this.dialog.open(RegistryInfoDialogComponent, dialogConfig);
-  }
-
-  formErrors(formSection: string): string {
-    let error = 0;
-    let total = 0;
-
-    const form = this.getFormGroup(formSection);
-
-    Object.keys(form.controls).forEach(key => {
-      const controlErrors: ValidationErrors = form.get(key).errors;
-      if (controlErrors != null) {
-        Object.keys(controlErrors).forEach(keyError => {
-          // console.log(
-          //   'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
-          //   controlErrors[keyError]
-          // );
-        });
-        error++;
-      }
-      if (this.isShowControl(formSection, key)) {
-        total++;
-      }
-    });
-
-    return `${total - error}/${total}`;
-  }
-
-  // @HostListener('window:beforeunload', ['$event'])
-  // unloadHandler(event: Event) {
-  //   console.log('Processing beforeunload...');
-  //   event.returnValue = false;
-  // }
-
-  canDeactivate() {
-    // return confirm('Do you really want to leave?');
-    // return this.form.submitted || !this.form.dirty;
-
-    const dialogRef = this.dialogService.createConfirmDialog({
-      title: 'Warning!!!',
-      content: 'Save before leave',
-      buttons: ['Cancel', 'Discard']
-    });
-
-    return dialogRef.afterClosed().pipe(
-      map(result => {
-        if (result === 'Cancel') {
-          return false;
-        }
-        if (result === 'Discard') {
-          return true;
-        }
-      }),
-      first()
-    );
   }
 }

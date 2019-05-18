@@ -59,7 +59,7 @@
             <a>Please enter a valid input.</a>
             <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
           </mat-hint>
-          <mat-error *ngFor="let validation of validationMessages.HeightCM">
+          <mat-error *ngFor="let validation of getValidations('HeightCM')">
             <mat-error *ngIf="isInvalid('HeightCM', validation.type)">
               <a>{{ validation.message }}</a>
               <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
@@ -79,7 +79,7 @@
             <a>Please enter a valid input.</a>
             <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
           </mat-hint>
-          <mat-error *ngFor="let validation of validationMessages.WeightKg">
+          <mat-error *ngFor="let validation of getValidations('WeightKg')">
             <mat-error *ngIf="isInvalid('WeightKg', validation.type)">
               <a>{{ validation.message }}</a>
               <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
@@ -212,6 +212,12 @@
           <mat-option value="2">No</mat-option>
           <mat-option value="3">Unknown</mat-option>
         </mat-select>
+        <mat-error *ngFor="let validation of getValidations('PrCVInt')">
+          <mat-error *ngIf="isInvalid('PrCVInt', validation.type)">
+            <a>{{ validation.message }}</a>
+            <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+          </mat-error>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field
@@ -397,4 +403,3 @@
 <a href="sts29#facebook_ads_example"
   >Click here to see an example of how a company uses Facebook ads.</a
 >
-
