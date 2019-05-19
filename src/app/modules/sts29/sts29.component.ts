@@ -46,24 +46,18 @@ export class STS29Component extends FormBasedComponent implements OnInit {
     this.store.dispatch(new UI.ChangeTitle('STS 2.9'));
     this.createForm();
     this.createFormConditions();
-    this.setValidations(validationMessages);
   }
 
   private createForm() {
     this.formGroupD = this.formBuilder.group(STS29form.sectionD);
     this.formGroupE = this.formBuilder.group(STS29form.sectionE);
 
-    this.setSections('DE');
-    this.sectionDetails = [
+    this.setAvailableSections('DE');
+    this.setSectionDetails([
       ['D', this.formGroupD, formConditions.sectionD, this.formDirectiveD],
       ['E', this.formGroupE, formConditions.sectionE, this.formDirectiveE]
-    ];
-  }
-
-  submitAllSections() {
-    this.sections.split('').forEach(section => {
-      this.getFormDirective(section).onSubmit(undefined);
-    });
+    ]);
+    this.setValidations(validationMessages);
   }
 
   submit() {
@@ -96,15 +90,11 @@ export class STS29Component extends FormBasedComponent implements OnInit {
   }
 
   clear() {
-    this.sections.split('').forEach(section => {
-      this.getFormDirective(section).resetForm();
-    });
+    super.clear();
   }
 
   clearErrors() {
-    this.sections.split('').forEach(section => {
-      this.getFormDirective(section).resetForm(this.getFormGroup(section).value);
-    });
+    super.clearErrors();
   }
 
   clickInfo() {

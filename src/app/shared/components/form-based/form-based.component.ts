@@ -5,53 +5,33 @@ import { map, first } from 'rxjs/operators';
 import { DialogService } from '../../services/dialog.service';
 import { FormCondition } from '../../../modules/sts29/sts29.condition';
 
-export interface AbstractFormBased {
-  createForm(): void;
-}
-
 export class FormBasedComponent {
-  protected sections: string;
-  protected sectionDetails: any[];
-  protected validations: any;
+  private availableSections: string;
+  private sectionDetails: any[];
+  private validations: any;
 
   constructor(private basedDialogService: DialogService) {}
 
-  setSections(sec: string) {
-    this.sections = sec;
+  protected setAvailableSections(sec: string) {
+    this.availableSections = sec;
+  }
+
+  protected setSectionDetails(sectionDetails: any[]) {
+    this.sectionDetails = sectionDetails;
+  }
+
+  protected setValidations(vals: object) {
+    this.validations = vals;
   }
 
   protected createFormConditions() {
-    this.sections.split('').forEach(section => {
+    this.availableSections.split('').forEach(section => {
       const sectionDetail = this.sectionDetails.find(o => o[0] === section);
       this.subscribeValueChanges(sectionDetail[1], sectionDetail[2]);
     });
   }
 
-  protected getFormGroup(section: string): FormGroup {
-    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-    if (sectionDetail === undefined) {
-      return null;
-    }
-    return sectionDetail[1];
-  }
-
-  protected getFormConditions(section: string): FormCondition[] {
-    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-    if (sectionDetail === undefined) {
-      return null;
-    }
-    return sectionDetail[2];
-  }
-
-  protected getFormDirective(section: string): FormGroupDirective {
-    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-    if (sectionDetail === undefined) {
-      return null;
-    }
-    return sectionDetail[3];
-  }
-
-  protected subscribeValueChanges(form: FormGroup, condisions: FormCondition[]) {
+  private subscribeValueChanges(form: FormGroup, condisions: FormCondition[]) {
     condisions.forEach(condition => {
       form.get(condition.parentControl).valueChanges.subscribe(newValue => {
         if (condition.conditionValues.findIndex(o => o === newValue) < 0) {
@@ -66,7 +46,31 @@ export class FormBasedComponent {
     });
   }
 
-  protected isShowControl(section: string, controlName: string): boolean {
+  private getFormGroup(section: string): FormGroup {
+    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
+    if (sectionDetail === undefined) {
+      return null;
+    }
+    return sectionDetail[1];
+  }
+
+  private getFormConditions(section: string): FormCondition[] {
+    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
+    if (sectionDetail === undefined) {
+      return null;
+    }
+    return sectionDetail[2];
+  }
+
+  private getFormDirective(section: string): FormGroupDirective {
+    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
+    if (sectionDetail === undefined) {
+      return null;
+    }
+    return sectionDetail[3];
+  }
+
+  public isShowControl(section: string, controlName: string): boolean {
     const form = this.getFormGroup(section);
     const condisions = this.getFormConditions(section);
 
@@ -84,17 +88,7 @@ export class FormBasedComponent {
     return true;
   }
 
-  protected setValidations(vals: object) {
-    this.validations = vals;
-  }
-
-  protected getValidations(control: string): object {
-    // const vals = Object.entries(this.validations).find(([key, value]) => key === control);
-    // if (vals === undefined) {
-    //   return null;
-    // }
-    // return vals[1];
-
+  public getValidations(control: string): object {
     let vals: object;
 
     Object.entries(this.validations).find(([key, value]) => {
@@ -112,7 +106,7 @@ export class FormBasedComponent {
     return vals[1];
   }
 
-  protected isInvalid(control: string, validationType: string) {
+  public isInvalid(control: string, validationType: string) {
     let section: string;
 
     // find control's section
@@ -131,7 +125,7 @@ export class FormBasedComponent {
     // &&       (this.formGroup.get(control).dirty || this.formGroup.get(control).touched)
   }
 
-  protected formErrors(formSection: string): string {
+  public getFormErrors(formSection: string): string {
     let error = 0;
     let total = 0;
 
@@ -156,7 +150,25 @@ export class FormBasedComponent {
     return `${total - error}/${total}`;
   }
 
-  canDeactivate() {
+  protected submitAllSections() {
+    this.availableSections.split('').forEach(section => {
+      this.getFormDirective(section).onSubmit(undefined);
+    });
+  }
+
+  protected clear() {
+    this.availableSections.split('').forEach(section => {
+      this.getFormDirective(section).resetForm();
+    });
+  }
+
+  protected clearErrors() {
+    this.availableSections.split('').forEach(section => {
+      this.getFormDirective(section).resetForm(this.getFormGroup(section).value);
+    });
+  }
+
+  public canDeactivate() {
     // ? Prototype for leaving form after changed
     // ? return confirm('Do you really want to leave?');
     // ? return this.form.submitted || !this.form.dirty;
