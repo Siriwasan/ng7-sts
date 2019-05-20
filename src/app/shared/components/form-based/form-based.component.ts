@@ -3,107 +3,157 @@ import { FormGroup, Validators, ValidationErrors, FormGroupDirective } from '@an
 import { map, first } from 'rxjs/operators';
 
 import { DialogService } from '../../services/dialog.service';
-import { FormCondition } from '../../../modules/sts29/sts29.condition';
+
+export interface FormCondition {
+  control: string;
+  parentControl: string;
+  conditionValues: any[];
+}
+
+export interface ValidationMessage {
+  type: string;
+  message: string;
+}
 
 export class FormBasedComponent {
-  private availableSections: string;
-  private sectionDetails: any[];
+  private availableSection: string;
+  private formConditions: any;
   private validations: any;
+  private sectionMembers: any[];
 
   constructor(private basedDialogService: DialogService) {}
 
-  protected setAvailableSections(sec: string) {
-    this.availableSections = sec;
+  protected setAvailableSection(availableSection: string) {
+    this.availableSection = availableSection;
   }
 
-  protected setSectionDetails(sectionDetails: any[]) {
-    this.sectionDetails = sectionDetails;
+  protected setFormConditions(formConditions: { [section: string]: FormCondition[] }) {
+    this.formConditions = formConditions;
   }
 
-  protected setValidations(vals: object) {
-    this.validations = vals;
+  protected setValidations(validations: {
+    [section: string]: { [control: string]: ValidationMessage[] };
+  }) {
+    this.validations = validations;
   }
 
-  protected createFormConditions() {
-    this.availableSections.split('').forEach(section => {
-      const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-      this.subscribeValueChanges(sectionDetail[1], sectionDetail[2]);
+  protected setSectionMembers(sectionMembers: any[]) {
+    this.sectionMembers = sectionMembers;
+  }
+
+  protected subscribeFormConditions() {
+    this.availableSection.split('').forEach(section => {
+      const sectionMember = this.sectionMembers.find(o => o[0] === section);
+      this.subscribeValueChanges(sectionMember[1], sectionMember[2]); // FormGroup - FormCondition[]
     });
   }
 
-  private subscribeValueChanges(form: FormGroup, condisions: FormCondition[]) {
+  private subscribeValueChanges(formGroup: FormGroup, condisions: FormCondition[]) {
     condisions.forEach(condition => {
-      form.get(condition.parentControl).valueChanges.subscribe(newValue => {
-        if (condition.conditionValues.findIndex(o => o === newValue) < 0) {
-          form.get(condition.control).setValidators(null);
-          form.get(condition.control).reset();
-          // this.formGroup.get(condition.control).disable();
+      formGroup.get(condition.parentControl).valueChanges.subscribe(value => {
+        const control = formGroup.get(condition.control);
+
+        if (condition.conditionValues.findIndex(o => o === value) < 0) {
+          control.setValidators(null);
+          control.reset();
+          // control.disable();
         } else {
-          form.get(condition.control).setValidators(Validators.required);
-          // this.formGroup.get(condition.control).enable();
+          control.setValidators(Validators.required);
+          // control.enable();
         }
       });
     });
   }
 
+  // initialize form to remove validator in child control
+  protected initializeForm() {
+    this.availableSection.split('').forEach(section => {
+      const formGroup = this.getFormGroup(section);
+      formGroup.setValue(formGroup.value);
+    });
+  }
+
   private getFormGroup(section: string): FormGroup {
-    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-    if (sectionDetail === undefined) {
+    const sectionMember = this.sectionMembers.find(o => o[0] === section);
+    if (sectionMember === undefined) {
       return null;
     }
-    return sectionDetail[1];
+    return sectionMember[1]; // FormGroup
   }
 
   private getFormConditions(section: string): FormCondition[] {
-    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-    if (sectionDetail === undefined) {
+    const sectionMember = this.sectionMembers.find(o => o[0] === section);
+    if (sectionMember === undefined) {
       return null;
     }
-    return sectionDetail[2];
+    return sectionMember[2]; // FormCondition[]
   }
 
   private getFormDirective(section: string): FormGroupDirective {
-    const sectionDetail = this.sectionDetails.find(o => o[0] === section);
-    if (sectionDetail === undefined) {
+    const sectionMember = this.sectionMembers.find(o => o[0] === section);
+    if (sectionMember === undefined) {
       return null;
     }
-    return sectionDetail[3];
+    return sectionMember[3]; // FormGroupDirective
   }
 
-  public isShowControl(section: string, controlName: string): boolean {
-    const form = this.getFormGroup(section);
-    const condisions = this.getFormConditions(section);
+  // public isShowControl(section: string, controlName: string): boolean {
+  //   const form = this.getFormGroup(section);
+  //   const condisions = this.getFormConditions(section);
 
-    const formCondition = condisions.find(condition => condition.control === controlName);
+  //   const formCondition = condisions.find(condition => condition.control === controlName);
 
-    if (formCondition === undefined) {
+  //   if (formCondition === undefined) {
+  //     return true;
+  //   }
+
+  //   const parentValue = form.get(formCondition.parentControl).value;
+  //   if (formCondition.conditionValues.findIndex(o => o === parentValue) < 0) {
+  //     return false;
+  //   }
+
+  //   return true;
+  // }
+
+  public isShowControl(control: string): boolean {
+    let condition: FormCondition;
+    let section: string;
+
+    Object.entries(this.formConditions).find(([key, value]) => {
+      const result = (value as FormCondition[]).find(o => o.control === control);
+      if (result === undefined) {
+        return false;
+      }
+      condition = result;
+      section = key[key.length - 1];
+      return true;
+    });
+
+    if (condition === undefined) {
       return true;
     }
 
-    const parentValue = form.get(formCondition.parentControl).value;
-    if (formCondition.conditionValues.findIndex(o => o === parentValue) < 0) {
+    const formGroup = this.getFormGroup(section);
+    const parentValue = formGroup.get(condition.parentControl).value;
+    if (condition.conditionValues.findIndex(o => o === parentValue) < 0) {
       return false;
     }
 
     return true;
   }
 
-  public getValidations(control: string): object {
-    let vals: object;
+  public getValidations(control: string): ValidationMessage[] {
+    let vals: ValidationMessage[];
 
     Object.entries(this.validations).find(([key, value]) => {
       const result = Object.entries(value).find(([key2, value2]) => key2 === control);
       if (result === undefined) {
         return false;
       }
-      vals = result;
+      vals = result[1];
       return true;
     });
-
-    if (vals === undefined) {
-      return null;
-    }
-    return vals[1];
+    return vals;
   }
 
   public isInvalid(control: string, validationType: string) {
@@ -125,14 +175,14 @@ export class FormBasedComponent {
     // &&       (this.formGroup.get(control).dirty || this.formGroup.get(control).touched)
   }
 
-  public getFormErrors(formSection: string): string {
+  public getFormErrors(section: string): string {
     let error = 0;
     let total = 0;
 
-    const form = this.getFormGroup(formSection);
+    const formGroup = this.getFormGroup(section);
 
-    Object.keys(form.controls).forEach(key => {
-      const controlErrors: ValidationErrors = form.get(key).errors;
+    Object.keys(formGroup.controls).forEach(key => {
+      const controlErrors: ValidationErrors = formGroup.get(key).errors;
       if (controlErrors != null) {
         Object.keys(controlErrors).forEach(keyError => {
           // console.log(
@@ -142,7 +192,7 @@ export class FormBasedComponent {
         });
         error++;
       }
-      if (this.isShowControl(formSection, key)) {
+      if (this.isShowControl(key)) {
         total++;
       }
     });
@@ -150,20 +200,29 @@ export class FormBasedComponent {
     return `${total - error}/${total}`;
   }
 
+  protected isFormDirty(): boolean {
+    let isDirty = false;
+
+    this.availableSection.split('').forEach(section => {
+      isDirty = isDirty || this.getFormGroup(section).dirty;
+    });
+    return isDirty;
+  }
+
   protected submitAllSections() {
-    this.availableSections.split('').forEach(section => {
+    this.availableSection.split('').forEach(section => {
       this.getFormDirective(section).onSubmit(undefined);
     });
   }
 
   protected clear() {
-    this.availableSections.split('').forEach(section => {
+    this.availableSection.split('').forEach(section => {
       this.getFormDirective(section).resetForm();
     });
   }
 
   protected clearErrors() {
-    this.availableSections.split('').forEach(section => {
+    this.availableSection.split('').forEach(section => {
       this.getFormDirective(section).resetForm(this.getFormGroup(section).value);
     });
   }
@@ -172,6 +231,10 @@ export class FormBasedComponent {
     // ? Prototype for leaving form after changed
     // ? return confirm('Do you really want to leave?');
     // ? return this.form.submitted || !this.form.dirty;
+
+    if (!this.isFormDirty()) {
+      return true;
+    }
 
     const dialogRef = this.basedDialogService.createConfirmDialog({
       title: 'Warning!!!',

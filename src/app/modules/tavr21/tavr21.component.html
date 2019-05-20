@@ -1,0 +1,315 @@
+<mat-accordion multi="true" class="my-headers-align">
+  <mat-expansion-panel class="accordian" [expanded]="true">
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        C. HISTORY AND RISK FACTORS
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ getFormErrors('C') }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+
+    <form [formGroup]="formGroupC" #formDirectiveC="ngForm">
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Infective Endocarditis</mat-label>
+        <mat-select formControlName="InfectiveEndo" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('InfectiveEndoType')"
+      >
+        <mat-label>Infective Endocarditis Type</mat-label>
+        <mat-select formControlName="InfectiveEndoType" required>
+          <mat-option value="Treated">Treated</mat-option>
+          <mat-option value="Active">Active</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Permanent Pacemaker</mat-label>
+        <mat-select formControlName="PermanentPace" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('PreviousPaceDate')"
+      >
+        <mat-label>Previous Pacer Date</mat-label>
+        <mat-select formControlName="PreviousPaceDate" required>
+          <mat-option value="Treated">Treated</mat-option>
+          <mat-option value="Active">Active</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Previous ICD</mat-label>
+        <mat-select formControlName="PreviousICD" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Prior PCI</mat-label>
+        <mat-select formControlName="PriorPCI" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('RecentPCIDate')"
+      >
+        <mat-label>Most Recent PCI Date</mat-label>
+        <mat-select formControlName="RecentPCIDate" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Prior CABG</mat-label>
+        <mat-select formControlName="PriorCABG" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('RecentCABGDate')"
+      >
+        <mat-label>Most Recent CABG Date</mat-label>
+        <mat-select formControlName="RecentCABGDate" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Prior Other Cardiac Surgery</mat-label>
+        <mat-select formControlName="PriorOtherCardiacSx" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Previous Cardiac Surgeries</mat-label>
+        <mat-select formControlName="NumberPreviousCardiacSx" required>
+          <mat-option value="0">0</mat-option>
+          <mat-option value="1">1</mat-option>
+          <mat-option value="2">2</mat-option>
+          <mat-option value="3">3</mat-option>
+          <mat-option value=">=4">>=4</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Prior Aortic Valve Procedure</mat-label>
+        <mat-select formControlName="PriorAVProd" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('RecentAVProdDate')"
+      >
+        <mat-label>Most Recent AV Procedure Date</mat-label>
+        <mat-select formControlName="RecentAVProdDate" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVReplaceSx')"
+      >
+        <mat-label>AV Replacement – Surgical</mat-label>
+        <mat-select formControlName="AVReplaceSx" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-2"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVProsType')"
+      >
+        <mat-label>AV Type</mat-label>
+        <mat-select formControlName="AVProsType" required>
+          <mat-option value="Bioprosthetic stented">Bioprosthetic stented</mat-option>
+          <mat-option value="Bioprosthetic stentless">Bioprosthetic stentless</mat-option>
+          <mat-option value="Not Documented">Not Documented</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-2"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVProsModel')"
+      >
+        <mat-label>AV Model</mat-label>
+        <mat-select formControlName="AVProsModel" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVRepairSX')"
+      >
+        <mat-label>AV Repair – Surgical</mat-label>
+        <mat-select formControlName="AVRepairSX" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVBalloonValvuloplasty')"
+      >
+        <mat-label>AV Balloon Valvuloplasty</mat-label>
+        <mat-select formControlName="AVBalloonValvuloplasty" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVTAVR')"
+      >
+        <mat-label>AV Transcatheter Valve Replacement</mat-label>
+        <mat-select formControlName="AVTAVR" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-2"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVTAVRModel')"
+      >
+        <mat-label>AV Transcath Valve Model</mat-label>
+        <mat-select formControlName="AVTAVRModel" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('AVTAVI')"
+      >
+        <mat-label>AV Transcatheter Valve Intervention</mat-label>
+        <mat-select formControlName="AVTAVI" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="item" style="width: 250px" fxLayout="column">
+        <mat-label>Prior Non-Aortic Valve Procedure</mat-label>
+        <mat-select formControlName="PriorNonAVProd" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('MVReplace')"
+      >
+        <mat-label>MV Replacement – Surgical</mat-label>
+        <mat-select formControlName="MVReplace" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-2"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('MVProsType')"
+      >
+        <mat-label>MV Type</mat-label>
+        <mat-select formControlName="MVProsType" required>
+          <mat-option value="Mechanical">Mechanical</mat-option>
+          <mat-option value="Bioprosthetic stented">Bioprosthetic stented</mat-option>
+          <mat-option value="Bioprosthetic stentless">Bioprosthetic stentless</mat-option>
+          <mat-option value="Not Documented">Not Documented</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field
+        class="item-1"
+        style="width: 250px"
+        fxLayout="column"
+        *ngIf="isShowControl('MVRepairSx')"
+      >
+        <mat-label>MV Repair – Surgical</mat-label>
+        <mat-select formControlName="MVRepairSx" required>
+          <mat-option value="No">No</mat-option>
+          <mat-option value="Yes">Yes</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
+  </mat-expansion-panel>
+</mat-accordion>
+
+<br />
+<br />
+<button mat-raised-button class="item" color="primary" (click)="submit()">Submit</button>
+<button mat-raised-button class="item" color="warn" (click)="clear()">Clear</button>
+<button mat-raised-button class="item" color="warn" (click)="clearErrors()">Clear Errors</button>
+<button mat-raised-button class="item" color="accent" (click)="load()">Load</button>
+<br />
+
+<div class="label-text">FormC value: {{ formGroupC.value | json }}</div>
+<br>
+
+<!-- <div class="label-text">Result value: {{ result | json }}</div> -->
+
+<div class="label-text">FormC status: {{ formGroupC.status }}</div>

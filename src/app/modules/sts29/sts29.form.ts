@@ -6,18 +6,18 @@ export const STS29form = {
     WeightKg: [null, [Validators.required, Validators.min(10), Validators.max(250)]],
     FHCAD: [null, Validators.required],
     Diabetes: [null, Validators.required],
-    DiabCtrl: [null],
+    DiabCtrl: [null, Validators.required],
     Dyslip: [null, Validators.required],
     Dialysis: [null, Validators.required],
     Hypertn: [null, Validators.required],
     InfEndo: [null, Validators.required],
-    InfEndTy: [null],
-    InfEndCult: [null],
+    InfEndTy: [null, Validators.required],
+    InfEndCult: [null, Validators.required],
     TobaccoUse: [null, Validators.required]
   },
   sectionE: {
     PrCVInt: [null, Validators.required],
-    PrCAB: [null],
-    PrValve: [null]
+    PrCAB: [null, Validators.required],
+    PrValve: [null, Validators.required]
   }
 };

@@ -1,9 +1,3 @@
-export interface FormCondition {
-  control: string;
-  parentControl: string;
-  conditionValues: any[];
-}
-
 export const formConditions = {
   sectionD: [
     { control: 'DiabCtrl', parentControl: 'Diabetes', conditionValues: ['1'] },

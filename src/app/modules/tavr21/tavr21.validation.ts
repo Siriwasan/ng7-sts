@@ -1,5 +1,7 @@
-export const validations = {
-  sectionD: {
+import { ValidationMessage } from '../../shared/components/form-based/form-based.component';
+
+export const validations: { [section: string]: { [control: string]: ValidationMessage[] } } = {
+  sectionC: {
     HeightCM: [
       { type: 'required', message: 'Height is required' },
       { type: 'min', message: 'Height must be at least 20 cm' },
@@ -8,10 +10,7 @@ export const validations = {
     WeightKg: [
       { type: 'required', message: 'Weight is required' },
       { type: 'min', message: 'Weight must be at least 10 kg' },
-      { type: 'max', message: 'Weight cannot be more than 250 kg' }
+      { type: 'max', message: 'Weight cannot be more than 250 kg' },
     ]
-  },
-  sectionE: {
-    PrCVInt: [{ type: 'required', message: 'Required' }]
   }
 };

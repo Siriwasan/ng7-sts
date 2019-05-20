@@ -13,9 +13,10 @@ import { AboutComponent } from './modules/about/about.component';
 import { STS29Component } from './modules/sts29/sts29.component';
 import { environment } from '../environments/environment';
 import { reducers } from './app.reducer';
+import { TAVR21Component } from './modules/tavr21/tavr21.component';
 
 @NgModule({
-  declarations: [AppComponent, WelcomeComponent, HomeComponent, AboutComponent, STS29Component],
+  declarations: [AppComponent, WelcomeComponent, HomeComponent, AboutComponent, STS29Component, TAVR21Component],
   imports: [
     CoreModule,
     SharedModule,

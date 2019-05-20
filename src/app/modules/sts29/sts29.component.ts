@@ -7,7 +7,7 @@ import { FormBasedComponent } from '../../shared/components/form-based/form-base
 import { STS29Model } from './sts29.model';
 import { STS29form } from './sts29.form';
 import { formConditions } from './sts29.condition';
-import { validationMessages } from './sts29.validation';
+import { validations } from './sts29.validation';
 import { STS29Service } from './sts29.service';
 
 import * as fromRoot from '../../app.reducer';
@@ -44,20 +44,24 @@ export class STS29Component extends FormBasedComponent implements OnInit {
 
   ngOnInit() {
     this.store.dispatch(new UI.ChangeTitle('STS 2.9'));
+
+    this.setAvailableSection('DE');
+    this.setFormConditions(formConditions);
+    this.setValidations(validations);
+
     this.createForm();
-    this.createFormConditions();
+    this.subscribeFormConditions();
+    this.initializeForm();
   }
 
   private createForm() {
     this.formGroupD = this.formBuilder.group(STS29form.sectionD);
     this.formGroupE = this.formBuilder.group(STS29form.sectionE);
 
-    this.setAvailableSections('DE');
-    this.setSectionDetails([
+    this.setSectionMembers([
       ['D', this.formGroupD, formConditions.sectionD, this.formDirectiveD],
       ['E', this.formGroupE, formConditions.sectionE, this.formDirectiveE]
     ]);
-    this.setValidations(validationMessages);
   }
 
   submit() {

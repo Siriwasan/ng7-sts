@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 
 import { STS29Model } from './sts29.model';
 
+const DB_COLLECTION = 'TAVR21';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,17 +14,17 @@ export class STS29Service {
   currentForm: STS29Model;
 
   saveForm(sts29Model: STS29Model) {
-    this.db.collection('STS29').add(sts29Model);
+    this.db.collection(DB_COLLECTION).add(sts29Model);
   }
 
   loadForm(): Observable<STS29Model[]> {
-    // const collection$: Observable<STS29Model> = this.db.collection('STS29').valueChanges();
+    // const collection$: Observable<STS29Model> = this.db.collection(DB_COLLECTION).valueChanges();
     // collection$.subscribe(data => console.log(data));
 
-    return this.db.collection<STS29Model>('STS29').valueChanges();
+    return this.db.collection<STS29Model>(DB_COLLECTION).valueChanges();
 
     // this.db
-    //   .collection('STS29')
+    //   .collection(DB_COLLECTION)
     //   .valueChanges()
     //   .subscribe((data: STS29Model[]) => {
     //     console.log(data);
@@ -30,7 +32,7 @@ export class STS29Service {
     //   });
 
     // this.db
-    //   .collection('STS29')
+    //   .collection(DB_COLLECTION)
     //   .snapshotChanges()
     //   .map(actions => {
     //     return actions.map(a => {

@@ -90,6 +90,9 @@
 
       <mat-form-field class="item" style="width: 250px" fxLayout="column">
         <mat-label>Family History of Premature Coronary Artery Disease</mat-label>
+        <mat-hint>
+          <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+        </mat-hint>
         <mat-select formControlName="FHCAD" required>
           <mat-option value="1">Yes</mat-option>
           <mat-option value="2">No</mat-option>
@@ -106,7 +109,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item-1" *ngIf="isShowControl('D', 'DiabCtrl')">
+      <mat-form-field class="item-1" *ngIf="isShowControl('DiabCtrl')">
         <mat-label>Diabetes-Control</mat-label>
         <mat-select formControlName="DiabCtrl" required>
           <mat-option value="1">None</mat-option>
@@ -154,7 +157,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item-1" *ngIf="isShowControl('D', 'InfEndTy')">
+      <mat-form-field class="item-1" *ngIf="isShowControl('InfEndTy')">
         <mat-label>Endocarditis Type</mat-label>
         <mat-select formControlName="InfEndTy" required>
           <mat-option value="1">Treated</mat-option>
@@ -162,7 +165,7 @@
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field class="item-1" *ngIf="isShowControl('D', 'InfEndCult')">
+      <mat-form-field class="item-1" *ngIf="isShowControl('InfEndCult')">
         <mat-label>Endocarditis Culture</mat-label>
         <mat-select formControlName="InfEndCult" required>
           <mat-option value="1">Culture negative</mat-option>
@@ -224,7 +227,7 @@
         class="item-1"
         style="width: 250px"
         fxLayout="column"
-        *ngIf="isShowControl('E', 'PrCAB')"
+        *ngIf="isShowControl('PrCAB')"
       >
         <mat-label>Previous coronary artery bypass</mat-label>
         <mat-select formControlName="PrCAB" required>
@@ -237,7 +240,7 @@
         class="item-1"
         style="width: 250px"
         fxLayout="column"
-        *ngIf="isShowControl('E', 'PrValve')"
+        *ngIf="isShowControl('PrValve')"
       >
         <mat-label>Previous valve procedure</mat-label>
         <mat-select formControlName="PrValve" required>
@@ -394,11 +397,16 @@
 <br />
 
 <div class="label-text">FormD value: {{ formGroupD.value | json }}</div>
+<br />
 <div class="label-text">FormE value: {{ formGroupE.value | json }}</div>
+<br />
 <div class="label-text">Result value: {{ result | json }}</div>
+<br />
 <div class="label-text">Flat Result value: {{ flatResult | json }}</div>
+<br />
 
 <div class="label-text">FormD status: {{ formGroupD.status }}</div>
+<br />
 
 <a href="sts29#facebook_ads_example"
   >Click here to see an example of how a company uses Facebook ads.</a
