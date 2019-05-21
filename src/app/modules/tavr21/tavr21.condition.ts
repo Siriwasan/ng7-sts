@@ -1,6 +1,6 @@
-import { FormCondition } from '../../shared/components/form-based/form-based.component';
+import { FormCondition } from '../../shared/components/form-based/form-based.model';
 
-export const formConditions: { [section: string]: FormCondition[] } = {
+export const formConditions: FormCondition = {
   sectionC: [
     {
       control: 'InfectiveEndoType',

@@ -1,6 +1,6 @@
-import { ValidationMessage } from '../../shared/components/form-based/form-based.component';
+import { FormValidation } from '../../shared/components/form-based/form-based.model';
 
-export const validations: { [section: string]: { [control: string]: ValidationMessage[] } } = {
+export const validations: FormValidation = {
   sectionC: {
     HeightCM: [
       { type: 'required', message: 'Height is required' },
@@ -10,7 +10,7 @@ export const validations: { [section: string]: { [control: string]: ValidationMe
     WeightKg: [
       { type: 'required', message: 'Weight is required' },
       { type: 'min', message: 'Weight must be at least 10 kg' },
-      { type: 'max', message: 'Weight cannot be more than 250 kg' },
+      { type: 'max', message: 'Weight cannot be more than 250 kg' }
     ]
   }
 };

@@ -45,6 +45,10 @@ export class TAVR21Component extends FormBasedComponent implements OnInit {
     this.createForm();
     this.subscribeFormConditions();
     this.initializeForm();
+
+    ''.split('').forEach(o => {
+      console.log('a' + o);
+    });
   }
 
   private createForm() {

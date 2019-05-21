@@ -3,17 +3,7 @@ import { FormGroup, Validators, ValidationErrors, FormGroupDirective } from '@an
 import { map, first } from 'rxjs/operators';
 
 import { DialogService } from '../../services/dialog.service';
-
-export interface FormCondition {
-  control: string;
-  parentControl: string;
-  conditionValues: any[];
-}
-
-export interface ValidationMessage {
-  type: string;
-  message: string;
-}
+import { FormCondition, FormValidation, ControlCondition, ValidationMessage, SectionMember } from './form-based.model';
 
 export class FormBasedComponent {
   private availableSection: string;
@@ -27,29 +17,27 @@ export class FormBasedComponent {
     this.availableSection = availableSection;
   }
 
-  protected setFormConditions(formConditions: { [section: string]: FormCondition[] }) {
+  protected setFormConditions(formConditions: FormCondition) {
     this.formConditions = formConditions;
   }
 
-  protected setValidations(validations: {
-    [section: string]: { [control: string]: ValidationMessage[] };
-  }) {
+  protected setValidations(validations: FormValidation) {
     this.validations = validations;
   }
 
-  protected setSectionMembers(sectionMembers: any[]) {
+  protected setSectionMembers(sectionMembers: SectionMember[]) {
     this.sectionMembers = sectionMembers;
   }
 
   protected subscribeFormConditions() {
     this.availableSection.split('').forEach(section => {
       const sectionMember = this.sectionMembers.find(o => o[0] === section);
-      this.subscribeValueChanges(sectionMember[1], sectionMember[2]); // FormGroup - FormCondition[]
+      this.subscribeValueChanges(sectionMember[1], sectionMember[2]); // FormGroup - ControlCondition[]
     });
   }
 
-  private subscribeValueChanges(formGroup: FormGroup, condisions: FormCondition[]) {
-    condisions.forEach(condition => {
+  private subscribeValueChanges(formGroup: FormGroup, conditions: ControlCondition[]) {
+    conditions.forEach(condition => {
       formGroup.get(condition.parentControl).valueChanges.subscribe(value => {
         const control = formGroup.get(condition.control);
 
@@ -81,12 +69,12 @@ export class FormBasedComponent {
     return sectionMember[1]; // FormGroup
   }
 
-  private getFormConditions(section: string): FormCondition[] {
+  private getFormConditions(section: string): ControlCondition[] {
     const sectionMember = this.sectionMembers.find(o => o[0] === section);
     if (sectionMember === undefined) {
       return null;
     }
-    return sectionMember[2]; // FormCondition[]
+    return sectionMember[2]; // ControlCondition[]
   }
 
   private getFormDirective(section: string): FormGroupDirective {
@@ -116,11 +104,11 @@ export class FormBasedComponent {
   // }
 
   public isShowControl(control: string): boolean {
-    let condition: FormCondition;
+    let condition: ControlCondition;
     let section: string;
 
     Object.entries(this.formConditions).find(([key, value]) => {
-      const result = (value as FormCondition[]).find(o => o.control === control);
+      const result = (value as ControlCondition[]).find(o => o.control === control);
       if (result === undefined) {
         return false;
       }
@@ -182,9 +170,9 @@ export class FormBasedComponent {
     const formGroup = this.getFormGroup(section);
 
     Object.keys(formGroup.controls).forEach(key => {
-      const controlErrors: ValidationErrors = formGroup.get(key).errors;
-      if (controlErrors != null) {
-        Object.keys(controlErrors).forEach(keyError => {
+      const validationErrors: ValidationErrors = formGroup.get(key).errors;
+      if (validationErrors != null) {
+        Object.keys(validationErrors).forEach(keyError => {
           // console.log(
           //   'Key control: ' + key + ', keyError: ' + keyError + ', err value: ',
           //   controlErrors[keyError]
