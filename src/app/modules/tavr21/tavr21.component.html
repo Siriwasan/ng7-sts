@@ -5,11 +5,11 @@
         C. HISTORY AND RISK FACTORS
       </mat-panel-title>
       <mat-panel-description>
-        {{ getFormErrors('C') }}
+        {{ getFormErrors(null) }}
       </mat-panel-description>
     </mat-expansion-panel-header>
 
-    <form [formGroup]="formGroupC" #formDirectiveC="ngForm">
+    <form [formGroup]="formGroup" #formDirective="ngForm">
       <mat-form-field class="item" style="width: 250px" fxLayout="column">
         <mat-label>Infective Endocarditis</mat-label>
         <mat-select formControlName="InfectiveEndo" required>
@@ -307,9 +307,9 @@
 <button mat-raised-button class="item" color="accent" (click)="load()">Load</button>
 <br />
 
-<div class="label-text">FormC value: {{ formGroupC.value | json }}</div>
+<div class="label-text">FormC value: {{ formGroup.value | json }}</div>
 <br>
 
 <!-- <div class="label-text">Result value: {{ result | json }}</div> -->
 
-<div class="label-text">FormC status: {{ formGroupC.status }}</div>
+<div class="label-text">FormC status: {{ formGroup.status }}</div>

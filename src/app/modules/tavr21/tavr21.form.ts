@@ -1,7 +1,7 @@
 import { Validators } from '@angular/forms';
 
 export const TAVR21form = {
-  sectionC: {
+  section: {
     InfectiveEndo: [null, Validators.required],
     InfectiveEndoType: [null, Validators.required],
     PermanentPace: [null, Validators.required],

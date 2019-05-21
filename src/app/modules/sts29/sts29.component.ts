@@ -45,13 +45,7 @@ export class STS29Component extends FormBasedComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new UI.ChangeTitle('STS 2.9'));
 
-    this.setAvailableSection('DE');
-    this.setFormConditions(formConditions);
-    this.setValidations(validations);
-
     this.createForm();
-    this.subscribeFormConditions();
-    this.initializeForm();
   }
 
   private createForm() {
@@ -59,9 +53,14 @@ export class STS29Component extends FormBasedComponent implements OnInit {
     this.formGroupE = this.formBuilder.group(STS29form.sectionE);
 
     this.setSectionMembers([
-      ['D', this.formGroupD, formConditions.sectionD, this.formDirectiveD],
-      ['E', this.formGroupE, formConditions.sectionE, this.formDirectiveE]
+      ['D', this.formGroupD, this.formDirectiveD, formConditions.sectionD],
+      ['E', this.formGroupE, this.formDirectiveE, formConditions.sectionE]
     ]);
+
+    this.setFormConditions(formConditions);
+    this.setValidations(validations);
+    this.subscribeFormConditions();
+    this.initializeForm();
   }
 
   submit() {

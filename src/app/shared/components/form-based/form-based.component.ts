@@ -3,19 +3,20 @@ import { FormGroup, Validators, ValidationErrors, FormGroupDirective } from '@an
 import { map, first } from 'rxjs/operators';
 
 import { DialogService } from '../../services/dialog.service';
-import { FormCondition, FormValidation, ControlCondition, ValidationMessage, SectionMember } from './form-based.model';
+import {
+  FormCondition,
+  FormValidation,
+  ControlCondition,
+  ValidationMessage,
+  SectionMember
+} from './form-based.model';
 
 export class FormBasedComponent {
-  private availableSection: string;
   private formConditions: any;
   private validations: any;
-  private sectionMembers: any[];
+  private sectionMembers: SectionMember[];
 
   constructor(private basedDialogService: DialogService) {}
-
-  protected setAvailableSection(availableSection: string) {
-    this.availableSection = availableSection;
-  }
 
   protected setFormConditions(formConditions: FormCondition) {
     this.formConditions = formConditions;
@@ -30,9 +31,8 @@ export class FormBasedComponent {
   }
 
   protected subscribeFormConditions() {
-    this.availableSection.split('').forEach(section => {
-      const sectionMember = this.sectionMembers.find(o => o[0] === section);
-      this.subscribeValueChanges(sectionMember[1], sectionMember[2]); // FormGroup - ControlCondition[]
+    this.getSectionMembers().forEach(sectionMember => {
+      this.subscribeValueChanges(sectionMember[1], sectionMember[3]); // FormGroup - ControlCondition[]
     });
   }
 
@@ -53,55 +53,53 @@ export class FormBasedComponent {
     });
   }
 
-  // initialize form to remove validator in child control
+  // ! initialize form to remove validator in hiding child control
   protected initializeForm() {
-    this.availableSection.split('').forEach(section => {
-      const formGroup = this.getFormGroup(section);
-      formGroup.setValue(formGroup.value);
-    });
+    this.getFormGroups().forEach(formGroup => formGroup.setValue(formGroup.value));
+  }
+
+  private getSectonMember(section: string): SectionMember {
+    if (section === null) {
+      return this.sectionMembers[0];
+    }
+    return this.sectionMembers.find(o => o[0] === section);
+  }
+
+  private getSectionMembers(): SectionMember[] {
+    return this.sectionMembers;
   }
 
   private getFormGroup(section: string): FormGroup {
-    const sectionMember = this.sectionMembers.find(o => o[0] === section);
+    const sectionMember = this.getSectonMember(section);
     if (sectionMember === undefined) {
       return null;
     }
     return sectionMember[1]; // FormGroup
   }
 
+  private getFormGroups(): FormGroup[] {
+    return this.sectionMembers.map(sectionMember => sectionMember[1]);
+  }
+
   private getFormConditions(section: string): ControlCondition[] {
-    const sectionMember = this.sectionMembers.find(o => o[0] === section);
+    const sectionMember = this.getSectonMember(section);
     if (sectionMember === undefined) {
       return null;
     }
-    return sectionMember[2]; // ControlCondition[]
+    return sectionMember[3]; // ControlCondition[]
   }
 
   private getFormDirective(section: string): FormGroupDirective {
-    const sectionMember = this.sectionMembers.find(o => o[0] === section);
+    const sectionMember = this.getSectonMember(section);
     if (sectionMember === undefined) {
       return null;
     }
-    return sectionMember[3]; // FormGroupDirective
+    return sectionMember[2]; // FormGroupDirective
   }
 
-  // public isShowControl(section: string, controlName: string): boolean {
-  //   const form = this.getFormGroup(section);
-  //   const condisions = this.getFormConditions(section);
-
-  //   const formCondition = condisions.find(condition => condition.control === controlName);
-
-  //   if (formCondition === undefined) {
-  //     return true;
-  //   }
-
-  //   const parentValue = form.get(formCondition.parentControl).value;
-  //   if (formCondition.conditionValues.findIndex(o => o === parentValue) < 0) {
-  //     return false;
-  //   }
-
-  //   return true;
-  // }
+  private getFormDirectives(): FormGroupDirective[] {
+    return this.sectionMembers.map(sectionMember => sectionMember[2]);
+  }
 
   public isShowControl(control: string): boolean {
     let condition: ControlCondition;
@@ -113,7 +111,7 @@ export class FormBasedComponent {
         return false;
       }
       condition = result;
-      section = key[key.length - 1];
+      section = key === 'section' ? null : key[key.length - 1];
       return true;
     });
 
@@ -144,7 +142,7 @@ export class FormBasedComponent {
     return vals;
   }
 
-  public isInvalid(control: string, validationType: string) {
+  public isInvalid(control: string, validationType: string): boolean {
     let section: string;
 
     // find control's section
@@ -153,7 +151,7 @@ export class FormBasedComponent {
       if (result === undefined) {
         return false;
       }
-      section = key[key.length - 1];
+      section = key === 'section' ? null : key[key.length - 1];
       return true;
     });
 
@@ -190,29 +188,22 @@ export class FormBasedComponent {
 
   protected isFormDirty(): boolean {
     let isDirty = false;
-
-    this.availableSection.split('').forEach(section => {
-      isDirty = isDirty || this.getFormGroup(section).dirty;
-    });
+    this.getFormGroups().forEach(formGroup => (isDirty = isDirty || formGroup.dirty));
     return isDirty;
   }
 
   protected submitAllSections() {
-    this.availableSection.split('').forEach(section => {
-      this.getFormDirective(section).onSubmit(undefined);
-    });
+    this.getFormDirectives().forEach(formDirective => formDirective.onSubmit(undefined));
   }
 
   protected clear() {
-    this.availableSection.split('').forEach(section => {
-      this.getFormDirective(section).resetForm();
-    });
+    this.getFormDirectives().forEach(formDirective => formDirective.resetForm());
   }
 
   protected clearErrors() {
-    this.availableSection.split('').forEach(section => {
-      this.getFormDirective(section).resetForm(this.getFormGroup(section).value);
-    });
+    this.getSectionMembers().forEach(sectionMember =>
+      sectionMember[2].resetForm(sectionMember[1].value)
+    );
   }
 
   public canDeactivate() {

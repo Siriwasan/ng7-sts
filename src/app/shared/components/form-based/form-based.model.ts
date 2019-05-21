@@ -21,4 +21,9 @@ export interface ValidationMessage {
   message: string;
 }
 
-export type SectionMember = [string, FormGroup, ControlCondition[], FormGroupDirective];
+export type SectionMember = [string, FormGroup, FormGroupDirective, ControlCondition[]];
+// Single section:
+//   [null, this.formGroup, this.formDirective, formConditions.section]
+// Multi section:
+//   ['A', this.formGroupA, this.formDirectiveA, formConditions.sectionA]
+//   ['B', this.formGroupB, this.formDirectiveB, formConditions.sectionB]

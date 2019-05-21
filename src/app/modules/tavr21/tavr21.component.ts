@@ -22,9 +22,9 @@ import * as UI from '../../shared/ui.actions';
 export class TAVR21Component extends FormBasedComponent implements OnInit {
   result: TAVR21Model;
 
-  formGroupC: FormGroup;
+  formGroup: FormGroup;
 
-  @ViewChild('formDirectiveC') formDirectiveC: FormGroupDirective;
+  @ViewChild('formDirective') formDirective: FormGroupDirective;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,23 +38,17 @@ export class TAVR21Component extends FormBasedComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new UI.ChangeTitle('TAVR 2.1'));
 
-    this.setAvailableSection('C');
-    this.setFormConditions(formConditions);
-    this.setValidations(validations);
-
     this.createForm();
-    this.subscribeFormConditions();
-    this.initializeForm();
-
-    ''.split('').forEach(o => {
-      console.log('a' + o);
-    });
   }
 
   private createForm() {
-    this.formGroupC = this.formBuilder.group(TAVR21form.sectionC);
+    this.formGroup = this.formBuilder.group(TAVR21form.section);
 
-    this.setSectionMembers([['C', this.formGroupC, formConditions.sectionC, this.formDirectiveC]]);
+    this.setSectionMembers([[null, this.formGroup, this.formDirective, formConditions.section]]);
+    this.setFormConditions(formConditions);
+    this.setValidations(validations);
+    this.subscribeFormConditions();
+    this.initializeForm();
   }
 
   submit() {
@@ -66,7 +60,7 @@ export class TAVR21Component extends FormBasedComponent implements OnInit {
         baseDb: 'TAVR version 2.1',
         addendum: 'BDMS modefied version 1.0'
       },
-      sectionC: { ...this.formGroupC.value }
+      section: { ...this.formGroup.value }
     };
 
     this.tavr21Service.saveForm(this.result);
@@ -81,7 +75,7 @@ export class TAVR21Component extends FormBasedComponent implements OnInit {
 
     this.tavr21Service.loadForm().subscribe(data => {
       console.log(data[0]);
-      this.formGroupC.setValue(data[0].sectionC);
+      this.formGroup.setValue(data[0].section);
       this.store.dispatch(new UI.StopLoading());
     });
   }

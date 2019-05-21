@@ -1,7 +1,7 @@
 import { FormCondition } from '../../shared/components/form-based/form-based.model';
 
 export const formConditions: FormCondition = {
-  sectionC: [
+  section: [
     {
       control: 'InfectiveEndoType',
       parentControl: 'InfectiveEndo',

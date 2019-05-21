@@ -1,7 +1,7 @@
 import { FormValidation } from '../../shared/components/form-based/form-based.model';
 
 export const validations: FormValidation = {
-  sectionC: {
+  section: {
     HeightCM: [
       { type: 'required', message: 'Height is required' },
       { type: 'min', message: 'Height must be at least 20 cm' },
