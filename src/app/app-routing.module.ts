@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { WelcomeComponent } from './modules/welcome/welcome.component';
-import { HomeComponent } from './modules/home/home.component';
-import { AboutComponent } from './modules/about/about.component';
-import { STS29Component } from './modules/sts29/sts29.component';
-import { TAVR21Component } from './modules/tavr21/tavr21.component';
+import { WelcomeComponent } from './feature/welcome/welcome.component';
+import { HomeComponent } from './feature/home/home.component';
+import { AboutComponent } from './feature/about/about.component';
+import { STS29Component } from './feature/sts29/sts29.component';
+import { TAVR21Component } from './feature/tavr21/tavr21.component';
 import { DeactivateGuard } from './shared/guards/deactivate.guard';
-import { RegistryListComponent } from './modules/registry-list/registry-list.component';
+import { RegistryListComponent } from './feature/registry-list/registry-list.component';
 
 const routes: Routes = [
   { path: '', component: WelcomeComponent },

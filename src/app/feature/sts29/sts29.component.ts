@@ -26,9 +26,11 @@ export class STS29Component extends FormBasedComponent implements OnInit {
   flatResult: object;
   allExpandState = false;
 
+  formGroupA: FormGroup;
   formGroupD: FormGroup;
   formGroupE: FormGroup;
 
+  @ViewChild('formDirectiveA') formDirectiveA: FormGroupDirective;
   @ViewChild('formDirectiveD') formDirectiveD: FormGroupDirective;
   @ViewChild('formDirectiveE') formDirectiveE: FormGroupDirective;
 
@@ -49,10 +51,12 @@ export class STS29Component extends FormBasedComponent implements OnInit {
   }
 
   private createForm() {
+    this.formGroupA = this.formBuilder.group(STS29form.sectionA);
     this.formGroupD = this.formBuilder.group(STS29form.sectionD);
     this.formGroupE = this.formBuilder.group(STS29form.sectionE);
 
     this.setSectionMembers([
+      ['A', this.formGroupA, this.formDirectiveA, formConditions.sectionA],
       ['D', this.formGroupD, this.formDirectiveD, formConditions.sectionD],
       ['E', this.formGroupE, this.formDirectiveE, formConditions.sectionE]
     ]);
@@ -72,12 +76,13 @@ export class STS29Component extends FormBasedComponent implements OnInit {
         baseDb: 'STS version 2.9',
         addendum: 'BDMS modefied version 1.0'
       },
+      sectionA: { ...this.formGroupA.value },
       sectionD: { ...this.formGroupD.value },
       sectionE: { ...this.formGroupE.value }
     };
     this.flatResult = { ...this.result.sectionD, ...this.result.sectionE };
 
-    // this.sts29Service.saveForm(this.result);
+    this.sts29Service.saveForm(this.result);
   }
 
   load() {

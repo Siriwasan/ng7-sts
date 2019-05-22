@@ -12,11 +12,48 @@
       </mat-panel-title>
     </mat-expansion-panel-header>
 
-    <p>This is the primary content of the panel.</p>
+    <form [formGroup]="formGroupA" #formDirectiveA="ngForm">
+      <div fxLayout="column" fxLayout.gt-xs="row">
+        <mat-form-field class="item">
+          <input
+            type="number"
+            matInput
+            placeholder="HN"
+            formControlName="HN"
+            required
+          />
+          <mat-hint>
+            <a>Please enter a valid input.</a>
+            <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+          </mat-hint>
+          <mat-error *ngFor="let validation of getValidations('HN')">
+            <mat-error *ngIf="isInvalid('HN', validation.type)">
+              <a>{{ validation.message }}</a>
+              <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
 
-    <mat-action-row>
-      <button mat-button>Click me</button>
-    </mat-action-row>
+        <mat-form-field class="item">
+          <input
+            matInput
+            placeholder="Name"
+            formControlName="PatName"
+            required
+          />
+          <mat-hint>
+            <a>Please enter a valid input.</a>
+            <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+          </mat-hint>
+          <mat-error *ngFor="let validation of getValidations('PatName')">
+            <mat-error *ngIf="isInvalid('PatName', validation.type)">
+              <a>{{ validation.message }}</a>
+              <mat-icon style="cursor: help;" (click)="clickInfo()">info_outline</mat-icon>
+            </mat-error>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
   </mat-expansion-panel>
 
   <mat-expansion-panel class="accordian" [expanded]="allExpandState">
